@@ -1,6 +1,6 @@
-# flutter_application_1
+# stopwatch_lafay
 
-A new Flutter project.
+A copy of an existing stopwatch phone application "Chrono Lafay" in order to practice Flutter.
 
 ## Getting Started
 
