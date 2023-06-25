@@ -4,36 +4,42 @@ import 'package:stopwatch_lafay/services/timer_picker_stateful_dialog.dart';
 
 class TimerPickerButton extends StatefulWidget {
   final num timerNumber;
-  Duration timerDuration;
+  final Duration timerDuration;
 
-  TimerPickerButton(this.timerNumber, this.timerDuration);
+  const TimerPickerButton(this.timerNumber, this.timerDuration, {super.key});
 
   @override
-  _TimerPickerButtonState createState() => _TimerPickerButtonState();
+  TimerPickerButtonState createState() => TimerPickerButtonState();
 }
 
-class _TimerPickerButtonState extends State<TimerPickerButton> {
+class TimerPickerButtonState extends State<TimerPickerButton> {
+  late Duration _timerDuration;
+
+  @override
+  void initState() {
+    super.initState();
+    _timerDuration = widget.timerDuration;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 80,
-      margin: EdgeInsets.fromLTRB(0, 2, 0, 0),
+      margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
       child: ElevatedButton(
           onPressed: () async {
             final Duration result = await showDialog(
                 context: context,
                 builder: (context) {
                   return TimerPickerDialog(
-                      widget.timerNumber, widget.timerDuration);
+                      widget.timerNumber, _timerDuration);
                 });
-            if (result != null) {
-              setState(() {
-                widget.timerDuration = result;
-              });
-            }
+            setState(() {
+              _timerDuration = result;
+            });
           },
           style: ElevatedButton.styleFrom(
-              primary: Colors.grey[800],
+              backgroundColor: Colors.grey[800],
               alignment: Alignment.centerLeft,
               fixedSize: Size.infinite),
           child: Row(
@@ -47,16 +53,17 @@ class _TimerPickerButtonState extends State<TimerPickerButton> {
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     child: Text(
                       'Chrono ${widget.timerNumber}',
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   Text(
-                    TimerEntity(widget.timerDuration.inSeconds).getTimer(),
+                    TimerEntity(_timerDuration.inSeconds.toDouble())
+                        .getTimer(),
                     style: TextStyle(fontSize: 16, color: Colors.amber[300]),
                   ),
                 ],
               ),
-              Icon(
+              const Icon(
                 Icons.edit_outlined,
                 size: 30,
               )

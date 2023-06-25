@@ -1,28 +1,23 @@
 class TimerEntity {
-  num duration;
+  late double duration;
 
-  TimerEntity(int duration) {
-    this.duration = duration;
-  }
+  TimerEntity(this.duration);
 
   String getTimer() {
-    num minutes = this.duration ~/ 60;
-    num minutesDouble = this.duration / 60;
-    num minutesDifference = minutesDouble - minutes;
+    double minutes = (duration ~/ 60).toDouble();
+    double minutesDouble = duration / 60;
+    double minutesDifference = minutesDouble - minutes;
 
     if (minutes >= 1) {
       //higher than a min
       if (minutesDifference != 0) {
-        return minutes.toString() +
-            '\'' +
-            ((minutesDifference) * 60).toInt().toString() +
-            '\"';
+        return '$minutes\'${((minutesDifference) * 60).toInt()}"';
       } else {
-        return minutes.toString() + '\'';
+        return '$minutes\'';
       }
     } else {
       //lower than a min
-      return this.duration.toString() + '\"';
+      return '$duration"';
     }
   }
 }

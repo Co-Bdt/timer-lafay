@@ -3,69 +3,26 @@ import 'package:flutter/material.dart';
 
 class TimerPickerDialog extends StatefulWidget {
   final num timerNumber;
-  Duration timerDuration;
-  bool textVisible = false;
+  final Duration timerDuration;
 
-  TimerPickerDialog(this.timerNumber, this.timerDuration);
+  const TimerPickerDialog(this.timerNumber, this.timerDuration, {super.key});
 
   @override
-  _TimerPickerDialogState createState() => _TimerPickerDialogState();
+  TimerPickerDialogState createState() => TimerPickerDialogState();
 }
 
-class _TimerPickerDialogState extends State<TimerPickerDialog> {
+class TimerPickerDialogState extends State<TimerPickerDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // Future<void> showInformationDialog(BuildContext context) {
-  //   return showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return StatefulBuilder(builder: (context, setState) {
-  //           return AlertDialog(
-  //             content: Form(
-  //               key: _formKey,
-  //               child: DurationPicker(
-  //                   duration: duration,
-  //                   onChange: (val) {
-  //                     setState(() {
-  //                       duration = val;
-  //                     });
-  //                   }),
-  //             ),
-  //             title: Text('Stateful Dialog'),
-  //             actions: <Widget>[
-  //               InkWell(
-  //                 child: Text('OK   '),
-  //                 onTap: () {
-  //                   if (_formKey.currentState.validate()) {
-  //                     // Do something like updating SharedPreferences or User Settings etc.
-  //                     Navigator.of(context).pop();
-  //                   }
-  //                 },
-  //               ),
-  //             ],
-  //           );
-  //         });
-  //       });
-  // }
+  late Duration _timerDuration;
+  bool textVisible = false;
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: Container(
-  //       child: Center(
-  //         child: ElevatedButton(
-  //             style: ElevatedButton.styleFrom(primary: Colors.deepOrange),
-  //             onPressed: () async {
-  //               await showInformationDialog(context);
-  //             },
-  //             child: Text(
-  //               "Stateful Dialog",
-  //               style: TextStyle(color: Colors.black, fontSize: 16),
-  //             )),
-  //       ),
-  //     ),
-  //   );
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _timerDuration = widget.timerDuration;
+  }
+
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setState) {
@@ -75,10 +32,10 @@ class _TimerPickerDialogState extends State<TimerPickerDialog> {
           child: DurationPicker(
             onChange: (val) {
               setState(() {
-                widget.timerDuration = val;
+                _timerDuration = val;
               });
             },
-            duration: widget.timerDuration,
+            duration: _timerDuration,
             baseUnit: BaseUnit.second,
           ),
         ),
@@ -86,12 +43,12 @@ class _TimerPickerDialogState extends State<TimerPickerDialog> {
         actions: <Widget>[
           Center(
             child: Visibility(
-              visible: widget.textVisible,
+              visible: textVisible,
               maintainSize: true,
               maintainAnimation: true,
               maintainState: true,
-              replacement: SizedBox.shrink(),
-              child: Text(
+              replacement: const SizedBox.shrink(),
+              child: const Text(
                 'Le chrono doit être d\'au moins 5 secondes',
                 style: TextStyle(
                   color: Colors.red,
@@ -104,13 +61,13 @@ class _TimerPickerDialogState extends State<TimerPickerDialog> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
-                  if (widget.timerDuration.inSeconds >= 5) {
-                    Navigator.of(context).pop(widget.timerDuration);
+                  if (_timerDuration.inSeconds >= 5) {
+                    Navigator.of(context).pop(_timerDuration);
                   } else {
                     setState(() {
-                      widget.textVisible = true;
+                      textVisible = true;
                     });
                   }
                 },

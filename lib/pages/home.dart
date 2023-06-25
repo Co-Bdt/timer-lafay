@@ -3,23 +3,25 @@ import 'dart:async';
 import 'package:stopwatch_lafay/services/timer_entity.dart';
 import 'package:stopwatch_lafay/services/rep_elevated_button.dart';
 import 'package:stopwatch_lafay/services/timer_elevated_button.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart' as audio_player;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
 import 'package:audio_session/audio_session.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   // final bool hasVibration;
 
   // Home(this.hasVibration);
 
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
   // object to manage the countdown
-  Timer _timer;
+  late Timer _timer;
   // boolean to know whether the stopwatch is on or not
   bool isStopwatchOn = false;
   // string that contain the timer currently running in 00'00" format
@@ -27,15 +29,15 @@ class _HomeState extends State<Home> {
   // integer that contain the timer currently running in seconds format
   int timerOnInSeconds = 0;
   // object to play sounds from assets
-  static AudioCache player = AudioCache();
+  final player = audio_player.AudioPlayer();
   // object to handle device's vibration
   // static Vibration vibration = Vibration();
   // booleans to check if the device has vibration capabilities
-  bool hasVibration;
-  bool hasAmplitudeControl;
-  bool hasCustomVibrationSupport;
+  late bool hasVibration;
+  late bool hasAmplitudeControl;
+  late bool hasCustomVibrationSupport;
 
-  AudioSession session;
+  late AudioSession session;
 
   Map<num, bool> reps = {
     0: true,
@@ -48,7 +50,7 @@ class _HomeState extends State<Home> {
   };
   // "device persistent storage using plugins like shared preferences"
   List<TimerEntity> timers = [
-    TimerEntity(25),
+    TimerEntity(7),
     TimerEntity(60),
     TimerEntity(90),
     TimerEntity(120),
@@ -77,25 +79,24 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
+  Future<void> startTimer() async {
+    await session.setActive(true);
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
       oneSec,
       (Timer timer) async {
         if (timerOnInSeconds == 0) {
-          print('session set false');
           await session.setActive(false);
           setState(() {
             timer.cancel();
-            this.isStopwatchOn = false;
+            isStopwatchOn = false;
           });
-        } else if (timerOnInSeconds <= 5) {
-          print('session set true');
-          await session.setActive(true);
+        } else if (timerOnInSeconds <= 6 && timerOnInSeconds >= 2) {
           setState(() {
             timerOnInSeconds--;
-            timerOn = TimerEntity(timerOnInSeconds).getTimer();
-            player.play('audio/mixkit-plastic-bubble-click-1124.mp3');
+            timerOn = TimerEntity(timerOnInSeconds.toDouble()).getTimer();
+            player.play(audio_player.AssetSource(
+                'audio/mixkit-plastic-bubble-click-1124-short.wav'));
             // if vibration checkbox is ticked
             // if (hasVibration) {
             //   Vibration.vibrate(duration: 250, amplitude: 128);
@@ -104,7 +105,7 @@ class _HomeState extends State<Home> {
         } else {
           setState(() {
             timerOnInSeconds--;
-            timerOn = TimerEntity(timerOnInSeconds).getTimer();
+            timerOn = TimerEntity(timerOnInSeconds.toDouble()).getTimer();
           });
         }
       },
@@ -113,9 +114,9 @@ class _HomeState extends State<Home> {
 
   startStopwatch(int timer) {
     setState(() {
-      this.isStopwatchOn = true;
-      this.timerOn = this.timers[timer].getTimer();
-      timerOnInSeconds = this.timers[timer].duration;
+      isStopwatchOn = true;
+      timerOn = timers[timer].getTimer();
+      timerOnInSeconds = timers[timer].duration.toInt();
       if (whichRepButtonIsPressed() != 0) {
         pressRepButton(whichRepButtonIsPressed() - 1);
       }
@@ -134,34 +135,33 @@ class _HomeState extends State<Home> {
         launchURL("https://olivier-lafay.com/categorie-produit/nos-livres/");
         break;
       default:
-        print('default');
     }
   }
 
   Future<void> launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(url as Uri)) {
+      await launchUrl(url as Uri);
     } else {
       throw 'Could not launch $url';
     }
   }
 
   void checkVibrationCapabilities() async {
-    hasVibration = await Vibration.hasVibrator();
-    hasAmplitudeControl = await Vibration.hasAmplitudeControl();
-    hasCustomVibrationSupport = await Vibration.hasCustomVibrationsSupport();
+    hasVibration = (await Vibration.hasVibrator())!;
+    hasAmplitudeControl = (await Vibration.hasAmplitudeControl())!;
+    hasCustomVibrationSupport = (await Vibration.hasCustomVibrationsSupport())!;
   }
 
   void configureAudioSession() async {
     session = await AudioSession.instance;
-    await session.configure(AudioSessionConfiguration(
+    await session.configure(const AudioSessionConfiguration(
       avAudioSessionCategory: AVAudioSessionCategory.playback,
       avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
       avAudioSessionMode: AVAudioSessionMode.defaultMode,
       avAudioSessionRouteSharingPolicy:
           AVAudioSessionRouteSharingPolicy.defaultPolicy,
       avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
-      androidAudioAttributes: const AndroidAudioAttributes(
+      androidAudioAttributes: AndroidAudioAttributes(
         contentType: AndroidAudioContentType.music,
         flags: AndroidAudioFlags.none,
         usage: AndroidAudioUsage.media,
@@ -175,8 +175,7 @@ class _HomeState extends State<Home> {
   void dispose() {
     super.dispose();
     _timer.cancel();
-    player.clear(
-        Uri.dataFromString('audio/mixkit-plastic-bubble-click-1124.mp3'));
+    player.dispose();
   }
 
   @override
@@ -186,7 +185,8 @@ class _HomeState extends State<Home> {
     // print('screen width/6=$widthBy6');
 
     // pre-load audio file to avoid getting a delay
-    player.load('audio/mixkit-plastic-bubble-click-1124.mp3');
+    // this method does not exists anymore
+    // player.load('audio/mixkit-plastic-bubble-click-1124.mp3');
 
     checkVibrationCapabilities();
     configureAudioSession();
@@ -194,8 +194,8 @@ class _HomeState extends State<Home> {
     return Scaffold(
         backgroundColor: Colors.grey[900],
         appBar: AppBar(
-          title: Text(
-            'Chrono Lafay',
+          title: const Text(
+            'Stopwatch Lafay',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.grey[900],
@@ -204,15 +204,15 @@ class _HomeState extends State<Home> {
               color: Colors.grey[900],
               onSelected: (value) => onSelected(context, value),
               itemBuilder: (context) => [
-                PopupMenuItem(
+                const PopupMenuItem(
                   textStyle: TextStyle(color: Colors.white, fontSize: 16),
                   value: 1,
-                  child: Text('Réglages'),
+                  child: Text('Settings'),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   textStyle: TextStyle(color: Colors.white, fontSize: 16),
                   value: 2,
-                  child: Text('Les livres d\'Olivier Lafay'),
+                  child: Text("Olivier Lafay's books"),
                 )
               ],
             )
@@ -222,69 +222,12 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Image.asset('assets/image2.jpg'),
-              // Expanded(child: Image.asset('assets/image2.jpg'), flex: 7),
-              // Expanded(
-              //   flex: 1,
-              //   child: Container(
-              //     alignment: Alignment.center,
-              //     color: Colors.red,
-              //     child: Text(
-              //       'red',
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              // ),
-              // Expanded(
-              //   flex: 1,
-              //   child: Container(
-              //     alignment: Alignment.center,
-              //     color: Colors.orange,
-              //     child: Text(
-              //       'orange',
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              // ),
-              // Expanded(
-              //   flex: 1,
-              //   child: Container(
-              //     alignment: Alignment.center,
-              //     color: Colors.yellow,
-              //     child: Text(
-              //       'yellow',
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              // ),
-              // Expanded(
-              //     child: Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   children: <Widget>[
-              //     Text(
-              //       '$counter',
-              //       style: TextStyle(color: Colors.white),
-              //       textAlign: TextAlign.center,
-              //     ),
-              //     FloatingActionButton(
-              //       onPressed: () {
-              //         setState(() {
-              //           counter += 1;
-              //         });
-              //       },
-              //       child: Icon(Icons.add),
-              //       backgroundColor: Colors.grey[800],
-              //     )
-              //   ],
-              // )),
-
               Visibility(
                 visible: true,
                 child: Expanded(
                   flex: 8,
                   child: Container(
-                    margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                    margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -342,19 +285,19 @@ class _HomeState extends State<Home> {
                       flex: 14,
                       fit: FlexFit.tight,
                       child: Container(
-                        margin: EdgeInsets.fromLTRB(5, 10, 5, 5),
+                        margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             TimerElevatedButton(
-                              timer: this.timers[0].getTimer(),
+                              timer: timers[0].getTimer(),
                               startStopWatch: () async {
                                 startStopwatch(0);
                               },
                             ),
                             TimerElevatedButton(
-                              timer: this.timers[1].getTimer(),
+                              timer: timers[1].getTimer(),
                               startStopWatch: () {
                                 startStopwatch(1);
                               },
@@ -368,19 +311,19 @@ class _HomeState extends State<Home> {
                     flex: 14,
                     fit: FlexFit.tight,
                     child: Container(
-                      margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                      margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TimerElevatedButton(
-                            timer: this.timers[2].getTimer(),
+                            timer: timers[2].getTimer(),
                             startStopWatch: () {
                               startStopwatch(2);
                             },
                           ),
                           TimerElevatedButton(
-                            timer: this.timers[3].getTimer(),
+                            timer: timers[3].getTimer(),
                             startStopWatch: () {
                               startStopwatch(3);
                             },
@@ -395,19 +338,19 @@ class _HomeState extends State<Home> {
                   flex: 14,
                   fit: FlexFit.tight,
                   child: Container(
-                      margin: EdgeInsets.fromLTRB(5, 5, 5, 10),
+                      margin: const EdgeInsets.fromLTRB(5, 5, 5, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TimerElevatedButton(
-                            timer: this.timers[4].getTimer(),
+                            timer: timers[4].getTimer(),
                             startStopWatch: () {
                               startStopwatch(4);
                             },
                           ),
                           TimerElevatedButton(
-                            timer: this.timers[5].getTimer(),
+                            timer: timers[5].getTimer(),
                             startStopWatch: () {
                               startStopwatch(5);
                             },
@@ -423,28 +366,10 @@ class _HomeState extends State<Home> {
                     child: Container(
                         alignment: Alignment.center,
                         child: (Text(
-                          "$timerOn",
-                          style: TextStyle(color: Colors.white, fontSize: 60),
-                        ))
-                        // Countdown(
-                        //   // controller: _controller,
-                        //   seconds: this.timerOnInSeconds,
-                        //   build: (_, double time) => Text(
-                        //     TimerEntity(time.toInt()).getTimer(),
-                        //     style: TextStyle(
-                        //       color: Colors.white,
-                        //       fontSize: 60,
-                        //     ),
-                        //     textAlign: TextAlign.center,
-                        //   ),
-                        //   interval: Duration(milliseconds: 100),
-                        //   onFinished: () {
-                        //     setState(() {
-                        //       this.isStopwatchOn = false;
-                        //     });
-                        //   },
-                        // ),
-                        ),
+                          timerOn,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 60),
+                        ))),
                   )),
               Visibility(
                 visible: isStopwatchOn ? true : false,
@@ -454,23 +379,21 @@ class _HomeState extends State<Home> {
                       onPressed: () {
                         setState(() {
                           _timer.cancel();
-                          this.isStopwatchOn = false;
+                          isStopwatchOn = false;
                           if (reps[0] != true) {
                             pressRepButton(whichRepButtonIsPressed() + 1);
                           }
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.red[900],
+                        backgroundColor: Colors.red[900],
                       ),
-                      child: Text(
+                      child: const Text(
                         'STOP',
                         style: TextStyle(fontSize: 40),
                       )),
                 ),
               ),
-            ]
-            // timers.map((timer) => TimerCard(timer: timer)).toList(),
-            ));
+            ]));
   }
 }

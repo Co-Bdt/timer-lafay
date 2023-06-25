@@ -2,50 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:stopwatch_lafay/services/timer_picker_button.dart';
 
 class Settings extends StatefulWidget {
+  const Settings({super.key});
+
   @override
-  _SettingsState createState() => _SettingsState();
+  SettingsState createState() => SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class SettingsState extends State<Settings> {
   List<Duration> durations = [
-    Duration(seconds: 25),
-    Duration(seconds: 60),
-    Duration(seconds: 90),
-    Duration(seconds: 120),
-    Duration(seconds: 180),
-    Duration(seconds: 240),
+    const Duration(seconds: 25),
+    const Duration(seconds: 60),
+    const Duration(seconds: 90),
+    const Duration(seconds: 120),
+    const Duration(seconds: 180),
+    const Duration(seconds: 240),
   ];
 
   bool checkboxVibrate = false;
 
-  // createDialog(BuildContext context) {
-  //   return showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return AlertDialog(
-  //           title: Text('Chrono 1'),
-  //           content: DurationPicker(
-  //             duration: duration,
-  //             onChange: (val) {
-  //               setState(() {
-  //                 duration = val;
-  //               });
-  //             },
-  //             baseUnit: BaseUnit.second,
-  //           ),
-  //         );
-  //       });
-  // }
-
   @override
   Widget build(BuildContext context) {
     // extract the arguments from the current ModalRoute setting and cast them as Home
-    final args = ModalRoute.of(context).settings.arguments as Map;
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Réglages',
           style: TextStyle(color: Colors.white),
         ),
@@ -56,7 +39,7 @@ class _SettingsState extends State<Settings> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(20, 20, 0, 18),
+              margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
                 'Chronomètres',
                 style: TextStyle(color: Colors.amber[300], fontSize: 17),
@@ -69,7 +52,7 @@ class _SettingsState extends State<Settings> {
             TimerPickerButton(5, durations[4]),
             TimerPickerButton(6, durations[5]),
             Container(
-              margin: EdgeInsets.fromLTRB(20, 20, 0, 18),
+              margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
                 'Comportement',
                 style: TextStyle(color: Colors.amber[300], fontSize: 17),
@@ -77,12 +60,12 @@ class _SettingsState extends State<Settings> {
             ),
             Container(
               height: 80,
-              margin: EdgeInsets.fromLTRB(0, 2, 0, 0),
+              margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
               child: ElevatedButton(
                   onPressed: () {
                     setState(() {
                       if (args['arg1']) {
-                        checkboxVibrate = !checkboxVibrate;
+                        checkboxVibrate = checkboxVibrate;
                       } else {
                         print(
                             'L\'appareil ne prend pas en charge les vibrations');
@@ -90,18 +73,18 @@ class _SettingsState extends State<Settings> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.grey[800],
+                      backgroundColor: Colors.grey[800],
                       alignment: Alignment.centerLeft,
                       fixedSize: Size.infinite),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
+                      const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                             child: Text(
                               'Vibrer',
                               style: TextStyle(fontSize: 18),
@@ -118,9 +101,9 @@ class _SettingsState extends State<Settings> {
                           value: checkboxVibrate,
                           activeColor: Colors.grey[850],
                           checkColor: Colors.amber[300],
-                          onChanged: (bool checkboxChanged) {
+                          onChanged: (bool? checkboxChanged) {
                             setState(() {
-                              checkboxVibrate = checkboxChanged;
+                              checkboxVibrate = checkboxChanged!;
                             });
                           })
                     ],

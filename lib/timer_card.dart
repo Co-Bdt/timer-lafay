@@ -3,18 +3,18 @@ import 'services/timer_entity.dart';
 
 class TimerCard extends StatelessWidget {
   final TimerEntity timer;
-  TimerCard({this.timer});
+  const TimerCard({super.key, required this.timer});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
               color: Colors.green[600],
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: Text(
                 timer.getTimer(),
                 style: TextStyle(
