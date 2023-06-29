@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:stopwatch_lafay/services/timer_entity.dart';
-import 'package:stopwatch_lafay/services/rep_elevated_button.dart';
-import 'package:stopwatch_lafay/services/timer_elevated_button.dart';
+import 'package:stopwatch_lafay/models/timer_entity.dart';
+import 'package:stopwatch_lafay/utilities/ring_manager.dart';
+import 'package:stopwatch_lafay/widgets/rep_elevated_button.dart';
+import 'package:stopwatch_lafay/widgets/timer_elevated_button.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_player;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
@@ -92,11 +93,12 @@ class HomeState extends State<Home> {
             isStopwatchOn = false;
           });
         } else if (timerOnInSeconds <= 6 && timerOnInSeconds >= 2) {
+          await RingManager.pool.play(RingManager.soundId);
           setState(() {
             timerOnInSeconds--;
             timerOn = TimerEntity(timerOnInSeconds.toDouble()).getTimer();
-            player.play(audio_player.AssetSource(
-                'audio/mixkit-plastic-bubble-click-1124-short.wav'));
+            // player.play(audio_player.AssetSource(
+            //     'audio/mixkit-plastic-bubble-click-1124-short.wav'));
             // if vibration checkbox is ticked
             // if (hasVibration) {
             //   Vibration.vibrate(duration: 250, amplitude: 128);
@@ -176,6 +178,7 @@ class HomeState extends State<Home> {
     super.dispose();
     _timer.cancel();
     player.dispose();
+    RingManager.pool.release();
   }
 
   @override

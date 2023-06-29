@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stopwatch_lafay/pages/home.dart';
-import 'package:stopwatch_lafay/pages/settings.dart';
+import 'package:stopwatch_lafay/screens/home.dart';
+import 'package:stopwatch_lafay/screens/settings.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -15,5 +15,11 @@ void main() {
   ));
 }
 
-// TODO :
 // prevent the app to be in landscape mode
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await SystemChrome.setPreferredOrientations(
+//       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+//   runApp(MaterialApp(
+//     home: Home(),
+//   ));

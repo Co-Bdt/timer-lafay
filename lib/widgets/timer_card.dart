@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'services/timer_entity.dart';
+import '../models/timer_entity.dart';
 
 class TimerCard extends StatelessWidget {
   final TimerEntity timer;

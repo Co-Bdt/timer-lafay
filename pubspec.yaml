@@ -12,12 +12,14 @@ dependencies:
   flutter:
     sdk: flutter
   
-  flutter_launcher_icons: ^0.13.1
-  audioplayers: ^3.0.1
-  url_launcher: ^6.1.11
-  duration_picker: ^1.1.1
-  vibration: ^1.8.1
+  
   audio_session: ^0.1.16
+  audioplayers: ^3.0.1
+  flutter_launcher_icons: ^0.13.1
+  duration_picker: ^1.1.1
+  soundpool: ^2.3.0
+  url_launcher: ^6.1.11
+  vibration: ^1.8.1
 
 dev_dependencies:
   flutter_test:

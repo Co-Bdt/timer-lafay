@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class RepElevatedButton extends StatefulWidget {
   final String number;
-  bool? press;
+  final bool? press;
   final Function pressRepButton;
 
-  RepElevatedButton(
+  const RepElevatedButton(
       {super.key, required this.number,
       required this.press,
       required this.pressRepButton});
@@ -16,6 +15,14 @@ class RepElevatedButton extends StatefulWidget {
 }
 
 class RepElevatedButtonState extends State<RepElevatedButton> {
+  bool? press;
+  
+  @override
+  void initState() {
+    super.initState();
+    press = widget.press;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

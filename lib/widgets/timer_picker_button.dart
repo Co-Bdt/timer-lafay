@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stopwatch_lafay/services/timer_entity.dart';
-import 'package:stopwatch_lafay/services/timer_picker_stateful_dialog.dart';
+import 'package:stopwatch_lafay/models/timer_entity.dart';
+import 'package:stopwatch_lafay/widgets/timer_picker_stateful_dialog.dart';
 
 class TimerPickerButton extends StatefulWidget {
   final num timerNumber;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stopwatch_lafay/services/timer_picker_button.dart';
+import 'package:stopwatch_lafay/widgets/timer_picker_button.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
