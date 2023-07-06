@@ -29,7 +29,7 @@ class SettingsState extends State<Settings> {
       backgroundColor: Colors.grey[900],
       appBar: AppBar(
         title: const Text(
-          'Réglages',
+          'Settings',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.grey[900],
@@ -41,7 +41,7 @@ class SettingsState extends State<Settings> {
             Container(
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
-                'Chronomètres',
+                'Stopwatches',
                 style: TextStyle(color: Colors.amber[300], fontSize: 17),
               ),
             ),
@@ -54,7 +54,7 @@ class SettingsState extends State<Settings> {
             Container(
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
-                'Comportement',
+                'Behaviour',
                 style: TextStyle(color: Colors.amber[300], fontSize: 17),
               ),
             ),
@@ -67,8 +67,7 @@ class SettingsState extends State<Settings> {
                       if (args['arg1']) {
                         checkboxVibrate = checkboxVibrate;
                       } else {
-                        print(
-                            'L\'appareil ne prend pas en charge les vibrations');
+                        print('Vibrate is not available on this device.');
                       }
                     });
                   },
@@ -86,12 +85,12 @@ class SettingsState extends State<Settings> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                             child: Text(
-                              'Vibrer',
+                              'Vibrate',
                               style: TextStyle(fontSize: 18),
                             ),
                           ),
                           Text(
-                            'Faire vibrer à la fin du minuteur',
+                            'Vibrate when the timer is over',
                             style:
                                 TextStyle(fontSize: 16, color: Colors.white70),
                           ),

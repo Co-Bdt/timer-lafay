@@ -31,8 +31,7 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
             final Duration result = await showDialog(
                 context: context,
                 builder: (context) {
-                  return TimerPickerDialog(
-                      widget.timerNumber, _timerDuration);
+                  return TimerPickerDialog(widget.timerNumber, _timerDuration);
                 });
             setState(() {
               _timerDuration = result;
@@ -52,13 +51,12 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     child: Text(
-                      'Chrono ${widget.timerNumber}',
+                      'Timer ${widget.timerNumber}',
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   Text(
-                    TimerEntity(_timerDuration.inSeconds.toDouble())
-                        .getTimer(),
+                    TimerEntity(_timerDuration.inSeconds.toDouble()).getTimer(),
                     style: TextStyle(fontSize: 16, color: Colors.amber[300]),
                   ),
                 ],

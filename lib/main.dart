@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stopwatch_lafay/screens/home.dart';
 import 'package:stopwatch_lafay/screens/settings.dart';
-import 'package:stopwatch_lafay/utilities/ring_manager.dart';
+import 'package:stopwatch_lafay/utils/ring_manager.dart';
+import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
+  RingManager.configureAudioSession();
   RingManager.loadRing();
+
+  VibrationManager.configureVibration();
 
   runApp(MaterialApp(
     initialRoute: '/home',

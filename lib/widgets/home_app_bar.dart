@@ -8,7 +8,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     switch (value) {
       case 1:
         await Navigator.pushNamed(context, '/settings',
-            arguments: {'arg1': 'false'});
+            arguments: {'timers': 'false'});
         break;
       case 2:
         launchURL("https://olivier-lafay.com/categorie-produit/nos-livres/");
@@ -18,10 +18,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Future<void> launchURL(String url) async {
-    if (await canLaunchUrl(url as Uri)) {
-      await launchUrl(url as Uri);
-    } else {
-      throw 'Could not launch $url';
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
     }
   }
 
