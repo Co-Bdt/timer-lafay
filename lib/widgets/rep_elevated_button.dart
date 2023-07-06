@@ -6,7 +6,8 @@ class RepElevatedButton extends StatefulWidget {
   final Function pressRepButton;
 
   const RepElevatedButton(
-      {super.key, required this.number,
+      {super.key,
+      required this.number,
       required this.press,
       required this.pressRepButton});
 
@@ -16,7 +17,7 @@ class RepElevatedButton extends StatefulWidget {
 
 class RepElevatedButtonState extends State<RepElevatedButton> {
   bool? press;
-  
+
   @override
   void initState() {
     super.initState();
@@ -35,14 +36,21 @@ class RepElevatedButtonState extends State<RepElevatedButton> {
           style: ElevatedButton.styleFrom(
               backgroundColor: widget.press != null
                   ? widget.press == true
-                      ? Colors.amber[300]
-                      : const Color.fromARGB(255, 46, 139, 87)
-                  : Colors.amber[300],
+                      ? Colors.amber[600]
+                      : const Color(0xFF2E8B57)
+                  : Colors.amber[600],
               textStyle: const TextStyle(fontSize: 30),
-              // minimumSize:
-              // Size((MediaQuery.of(context).size.width / 6) - 59, 0),
               padding: const EdgeInsets.all(10)),
-          child: Text(widget.number)),
+          child: Text(widget.number,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  shadows: [
+                    Shadow(
+                        color: Colors.black,
+                        blurRadius: 1,
+                        offset: Offset(0.5, 0.5))
+                  ]))),
     );
   }
 }

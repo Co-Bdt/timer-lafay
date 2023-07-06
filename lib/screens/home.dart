@@ -2,19 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:stopwatch_lafay/models/timer_entity.dart';
 import 'package:stopwatch_lafay/utilities/ring_manager.dart';
+import 'package:stopwatch_lafay/widgets/home_app_bar.dart';
 import 'package:stopwatch_lafay/widgets/rep_elevated_button.dart';
 import 'package:stopwatch_lafay/widgets/timer_elevated_button.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_player;
-import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
 import 'package:audio_session/audio_session.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-
-  // final bool hasVibration;
-
-  // Home(this.hasVibration);
 
   @override
   HomeState createState() => HomeState();
@@ -32,10 +28,10 @@ class HomeState extends State<Home> {
   // object to play sounds from assets
   final player = audio_player.AudioPlayer();
   // object to handle device's vibration
-  // static Vibration vibration = Vibration();
-  // booleans to check if the device has vibration capabilities
   late bool hasVibration;
+  // static Vibration vibration = Vibration();
   late bool hasAmplitudeControl;
+  // booleans to check if the device has vibration capabilities
   late bool hasCustomVibrationSupport;
 
   late AudioSession session;
@@ -51,7 +47,7 @@ class HomeState extends State<Home> {
   };
   // "device persistent storage using plugins like shared preferences"
   List<TimerEntity> timers = [
-    TimerEntity(7),
+    TimerEntity(30),
     TimerEntity(60),
     TimerEntity(90),
     TimerEntity(120),
@@ -97,8 +93,6 @@ class HomeState extends State<Home> {
           setState(() {
             timerOnInSeconds--;
             timerOn = TimerEntity(timerOnInSeconds.toDouble()).getTimer();
-            // player.play(audio_player.AssetSource(
-            //     'audio/mixkit-plastic-bubble-click-1124-short.wav'));
             // if vibration checkbox is ticked
             // if (hasVibration) {
             //   Vibration.vibrate(duration: 250, amplitude: 128);
@@ -124,28 +118,6 @@ class HomeState extends State<Home> {
       }
       startTimer();
     });
-  }
-
-  onSelected(BuildContext context, int value) async {
-    switch (value) {
-      case 1:
-        await Navigator.pushNamed(context, '/settings',
-            arguments: {'arg1': hasVibration});
-        setState(() {});
-        break;
-      case 2:
-        launchURL("https://olivier-lafay.com/categorie-produit/nos-livres/");
-        break;
-      default:
-    }
-  }
-
-  Future<void> launchURL(String url) async {
-    if (await canLaunchUrl(url as Uri)) {
-      await launchUrl(url as Uri);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   void checkVibrationCapabilities() async {
@@ -183,44 +155,12 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // double widthBy6 = MediaQuery.of(context).size.width / 6;
-    // print('screen width=${MediaQuery.of(context).size.width}');
-    // print('screen width/6=$widthBy6');
-
-    // pre-load audio file to avoid getting a delay
-    // this method does not exists anymore
-    // player.load('audio/mixkit-plastic-bubble-click-1124.mp3');
-
     checkVibrationCapabilities();
-    configureAudioSession();
+    // configureAudioSession();
 
     return Scaffold(
         backgroundColor: Colors.grey[900],
-        appBar: AppBar(
-          title: const Text(
-            'Stopwatch Lafay',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.grey[900],
-          actions: <Widget>[
-            PopupMenuButton<int>(
-              color: Colors.grey[900],
-              onSelected: (value) => onSelected(context, value),
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  textStyle: TextStyle(color: Colors.white, fontSize: 16),
-                  value: 1,
-                  child: Text('Settings'),
-                ),
-                const PopupMenuItem(
-                  textStyle: TextStyle(color: Colors.white, fontSize: 16),
-                  value: 2,
-                  child: Text("Olivier Lafay's books"),
-                )
-              ],
-            )
-          ],
-        ),
+        appBar: const HomeAppBar(),
         body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.stretch,

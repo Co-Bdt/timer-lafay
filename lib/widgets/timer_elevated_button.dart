@@ -4,7 +4,8 @@ class TimerElevatedButton extends StatelessWidget {
   final String timer;
   final Function startStopWatch;
 
-  const TimerElevatedButton({super.key, required this.timer, required this.startStopWatch});
+  const TimerElevatedButton(
+      {super.key, required this.timer, required this.startStopWatch});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +17,11 @@ class TimerElevatedButton extends StatelessWidget {
               startStopWatch();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 46, 139, 87),
+              backgroundColor: const Color(0xFF2E8B57),
               textStyle: const TextStyle(fontSize: 30),
             ),
-            child: Text(timer)),
+            child: Text(timer,
+                style: const TextStyle(fontWeight: FontWeight.w500))),
       ),
     );
   }

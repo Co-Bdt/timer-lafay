@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stopwatch_lafay/screens/home.dart';
 import 'package:stopwatch_lafay/screens/settings.dart';
+import 'package:stopwatch_lafay/utilities/ring_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+  RingManager.loadRing();
+
   runApp(MaterialApp(
-    // home: Home(),
     initialRoute: '/home',
     routes: {
-      // '/': (context) => Loading(),
       '/home': (context) => const Home(),
       '/settings': (context) => const Settings(),
-      // '/timer_picker': (context) => TimerPickerDialog(),
     },
   ));
 }
-
-// prevent the app to be in landscape mode
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await SystemChrome.setPreferredOrientations(
-//       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-//   runApp(MaterialApp(
-//     home: Home(),
-//   ));

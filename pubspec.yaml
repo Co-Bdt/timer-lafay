@@ -12,7 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
   
-  
   audio_session: ^0.1.16
   audioplayers: ^3.0.1
   flutter_launcher_icons: ^0.13.1
@@ -35,4 +34,4 @@ flutter:
   uses-material-design: true
   
   assets:
-    - assets/audio/
+    - packages/stopwatch_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav

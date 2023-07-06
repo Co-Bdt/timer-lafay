@@ -1,5 +1,5 @@
 class TimerEntity {
-  late double duration;
+  double duration;
 
   TimerEntity(this.duration);
 
@@ -11,13 +11,17 @@ class TimerEntity {
     if (minutes >= 1) {
       //higher than a min
       if (minutesDifference != 0) {
-        return '$minutes\'${((minutesDifference) * 60).toInt()}"';
+        return '${removeDecimalZeroFormat(minutes)}\'${removeDecimalZeroFormat(minutesDifference * 60)}"';
       } else {
-        return '$minutes\'';
+        return '${removeDecimalZeroFormat(minutes)}\'';
       }
     } else {
       //lower than a min
-      return '$duration"';
+      return '${removeDecimalZeroFormat(duration)}"';
     }
+  }
+
+  String removeDecimalZeroFormat(double n) {
+    return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 1);
   }
 }
