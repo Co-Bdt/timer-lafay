@@ -24,7 +24,7 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 70,
       margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
       child: ElevatedButton(
           onPressed: () async {
@@ -52,18 +52,21 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     child: Text(
                       'Timer ${widget.timerNumber}',
-                      style: const TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                   Text(
                     TimerEntity(_timerDuration.inSeconds.toDouble()).getTimer(),
-                    style: TextStyle(fontSize: 16, color: Colors.amber[300]),
+                    style: TextStyle(fontSize: 14, color: Colors.amber[600]),
                   ),
                 ],
               ),
-              const Icon(
-                Icons.edit_outlined,
-                size: 30,
+              const Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                child: Icon(
+                  Icons.edit_outlined,
+                  size: 30,
+                ),
               )
             ],
           )),

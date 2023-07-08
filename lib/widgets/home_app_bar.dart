@@ -32,26 +32,29 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       backgroundColor: Colors.grey[900],
       actions: <Widget>[
-        PopupMenuButton<int>(
-          icon: const Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 28,
-          ),
-          color: Colors.grey[900],
-          onSelected: (value) => onSelected(context, value),
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              textStyle: TextStyle(color: Colors.white, fontSize: 16),
-              value: 1,
-              child: Text('Settings'),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 3, 0),
+          child: PopupMenuButton<int>(
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 28,
             ),
-            const PopupMenuItem(
-              textStyle: TextStyle(color: Colors.white, fontSize: 16),
-              value: 2,
-              child: Text("Olivier Lafay's books"),
-            )
-          ],
+            color: Colors.grey[900],
+            onSelected: (value) => onSelected(context, value),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                value: 1,
+                child: Text('Settings'),
+              ),
+              const PopupMenuItem(
+                textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                value: 2,
+                child: Text("Olivier Lafay's books"),
+              )
+            ],
+          ),
         )
       ],
     );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stopwatch_lafay/utils/persistence_manager.dart';
+import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 import 'package:stopwatch_lafay/widgets/timer_picker_button.dart';
 
 class Settings extends StatefulWidget {
@@ -18,7 +20,7 @@ class SettingsState extends State<Settings> {
     const Duration(seconds: 240),
   ];
 
-  bool checkboxVibrate = false;
+  bool isVibrationActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class SettingsState extends State<Settings> {
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
                 'Stopwatches',
-                style: TextStyle(color: Colors.amber[300], fontSize: 17),
+                style: TextStyle(color: Colors.amber[600], fontSize: 17),
               ),
             ),
             TimerPickerButton(1, durations[0]),
@@ -55,20 +57,22 @@ class SettingsState extends State<Settings> {
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
                 'Behaviour',
-                style: TextStyle(color: Colors.amber[300], fontSize: 17),
+                style: TextStyle(color: Colors.amber[600], fontSize: 17),
               ),
             ),
             Container(
-              height: 80,
+              height: 70,
               margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
               child: ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      if (args['arg1']) {
-                        checkboxVibrate = checkboxVibrate;
-                      } else {
-                        print('Vibrate is not available on this device.');
-                      }
+                      // if (args['arg1']) {
+                      //   isVibrationActive = isVibrationActive;
+                      // } else {
+                      // open dialog to inform the user that vibration is not available
+                      // close dialog when the user taps on the OK button
+
+                      // }
                     });
                   },
                   style: ElevatedButton.styleFrom(
@@ -77,6 +81,7 @@ class SettingsState extends State<Settings> {
                       fixedSize: Size.infinite),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -86,24 +91,57 @@ class SettingsState extends State<Settings> {
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                             child: Text(
                               'Vibrate',
-                              style: TextStyle(fontSize: 18),
+                              style: TextStyle(fontSize: 16),
                             ),
                           ),
                           Text(
                             'Vibrate when the timer is over',
                             style:
-                                TextStyle(fontSize: 16, color: Colors.white70),
+                                TextStyle(fontSize: 14, color: Colors.white70),
                           ),
                         ],
                       ),
                       Checkbox(
-                          value: checkboxVibrate,
+                          value: PersistenceManager.prefs
+                                  .getBool('isVibrationActive') ??
+                              false,
+                          side: MaterialStateBorderSide.resolveWith((states) =>
+                              const BorderSide(color: Colors.white)),
                           activeColor: Colors.grey[850],
-                          checkColor: Colors.amber[300],
-                          onChanged: (bool? checkboxChanged) {
-                            setState(() {
-                              checkboxVibrate = checkboxChanged!;
-                            });
+                          checkColor: Colors.amber[600],
+                          onChanged: (bool? checkboxChanged) async {
+                            if (VibrationManager.hasVibration) {
+                              setState(() {
+                                isVibrationActive = checkboxChanged!;
+                              });
+                              // Save the value to the shared preferences
+                              PersistenceManager.prefs.setBool(
+                                  'isVibrationActive', checkboxChanged!);
+                              VibrationManager.isVibrating = checkboxChanged;
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                    backgroundColor: Colors.grey[900],
+                                    title: const Text("Information",
+                                        style: TextStyle(color: Colors.white)),
+                                    content: const Text(
+                                        "Vibration is not available on this device",
+                                        style:
+                                            TextStyle(color: Colors.white70)),
+                                    actions: <Widget>[
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            "OK",
+                                            style: TextStyle(
+                                                color: Colors.amber[600]),
+                                          ))
+                                    ]),
+                              );
+                            }
                           })
                     ],
                   )),

@@ -43,14 +43,9 @@ class RepElevatedButtonState extends State<RepElevatedButton> {
               padding: const EdgeInsets.all(10)),
           child: Text(widget.number,
               style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  shadows: [
-                    Shadow(
-                        color: Colors.black,
-                        blurRadius: 1,
-                        offset: Offset(0.5, 0.5))
-                  ]))),
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ))),
     );
   }
 }

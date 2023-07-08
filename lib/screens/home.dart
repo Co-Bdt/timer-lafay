@@ -87,9 +87,14 @@ class HomeState extends State<Home> {
           setState(() {
             timerOnInSeconds--;
             timerOn = TimerEntity(timerOnInSeconds.toDouble()).getTimer();
-            // if vibration checkbox is ticked
-            if (VibrationManager.hasVibration) {
-              Vibration.vibrate(amplitude: 128);
+
+            // if the user has enabled vibration
+            if (VibrationManager.isVibrating) {
+              if (VibrationManager.hasAmplitudeControl) {
+                Vibration.vibrate(duration: 250, amplitude: 128);
+              } else {
+                Vibration.vibrate(duration: 250);
+              }
             }
           });
         } else {

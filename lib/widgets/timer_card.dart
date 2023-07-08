@@ -13,7 +13,7 @@ class TimerCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-              color: Colors.green[600],
+              color: const Color(0xFF2E8B57),
               padding: const EdgeInsets.all(12),
               child: Text(
                 timer.getTimer(),
