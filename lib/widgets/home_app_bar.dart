@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:stopwatch_lafay/models/timer_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key});
+  final List<TimerEntity> timers;
+  final VoidCallback onPop;
+
+  const HomeAppBar({super.key, required this.timers, required this.onPop});
 
   onSelected(BuildContext context, int value) async {
     switch (value) {
       case 1:
         await Navigator.pushNamed(context, '/settings',
-            arguments: {'timers': 'false'});
+            arguments: {'timers': timers}).then((value) => onPop());
         break;
       case 2:
         launchURL("https://olivier-lafay.com/categorie-produit/nos-livres/");

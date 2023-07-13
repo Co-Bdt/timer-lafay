@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stopwatch_lafay/models/timer_entity.dart';
 import 'package:stopwatch_lafay/utils/persistence_manager.dart';
 import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 import 'package:stopwatch_lafay/widgets/timer_picker_button.dart';
@@ -11,21 +12,22 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
-  List<Duration> durations = [
-    const Duration(seconds: 25),
-    const Duration(seconds: 60),
-    const Duration(seconds: 90),
-    const Duration(seconds: 120),
-    const Duration(seconds: 180),
-    const Duration(seconds: 240),
-  ];
-
   bool isVibrationActive = false;
+
+  List<TimerEntity> durations = [];
+
+  void loadTimers(Map args) {
+    if (args['timers'] != null) {
+      for (var i = 0; i < args['timers'].length; i++) {
+        durations.add(args['timers'][i]);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // extract the arguments from the current ModalRoute setting and cast them as Home
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    // extract the arguments from the current ModalRoute settings and pass them
+    loadTimers(ModalRoute.of(context)!.settings.arguments as Map);
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
@@ -47,14 +49,14 @@ class SettingsState extends State<Settings> {
                 style: TextStyle(color: Colors.amber[600], fontSize: 17),
               ),
             ),
-            TimerPickerButton(1, durations[0]),
-            TimerPickerButton(2, durations[1]),
-            TimerPickerButton(3, durations[2]),
-            TimerPickerButton(4, durations[3]),
-            TimerPickerButton(5, durations[4]),
-            TimerPickerButton(6, durations[5]),
+            TimerPickerButton(1, Duration(seconds: durations[0].duration)),
+            TimerPickerButton(2, Duration(seconds: durations[1].duration)),
+            TimerPickerButton(3, Duration(seconds: durations[2].duration)),
+            TimerPickerButton(4, Duration(seconds: durations[3].duration)),
+            TimerPickerButton(5, Duration(seconds: durations[4].duration)),
+            TimerPickerButton(6, Duration(seconds: durations[5].duration)),
             Container(
-              margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
+              margin: const EdgeInsets.fromLTRB(20, 20, 0, 20),
               child: Text(
                 'Behaviour',
                 style: TextStyle(color: Colors.amber[600], fontSize: 17),
@@ -62,89 +64,76 @@ class SettingsState extends State<Settings> {
             ),
             Container(
               height: 70,
-              margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
-              child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      // if (args['arg1']) {
-                      //   isVibrationActive = isVibrationActive;
-                      // } else {
-                      // open dialog to inform the user that vibration is not available
-                      // close dialog when the user taps on the OK button
-
-                      // }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[800],
-                      alignment: Alignment.centerLeft,
-                      fixedSize: Size.infinite),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+              padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
+              color: Colors.grey[800],
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                            child: Text(
-                              'Vibrate',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          Text(
-                            'Vibrate when the timer is over',
-                            style:
-                                TextStyle(fontSize: 14, color: Colors.white70),
-                          ),
-                        ],
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                        child: Text(
+                          'Vibration',
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      Checkbox(
-                          value: PersistenceManager.prefs
-                                  .getBool('isVibrationActive') ??
-                              false,
-                          side: MaterialStateBorderSide.resolveWith((states) =>
-                              const BorderSide(color: Colors.white)),
-                          activeColor: Colors.grey[850],
-                          checkColor: Colors.amber[600],
-                          onChanged: (bool? checkboxChanged) async {
-                            if (VibrationManager.hasVibration) {
-                              setState(() {
-                                isVibrationActive = checkboxChanged!;
-                              });
-                              // Save the value to the shared preferences
-                              PersistenceManager.prefs.setBool(
-                                  'isVibrationActive', checkboxChanged!);
-                              VibrationManager.isVibrating = checkboxChanged;
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                    backgroundColor: Colors.grey[900],
-                                    title: const Text("Information",
-                                        style: TextStyle(color: Colors.white)),
-                                    content: const Text(
-                                        "Vibration is not available on this device",
-                                        style:
-                                            TextStyle(color: Colors.white70)),
-                                    actions: <Widget>[
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text(
-                                            "OK",
-                                            style: TextStyle(
-                                                color: Colors.amber[600]),
-                                          ))
-                                    ]),
-                              );
-                            }
-                          })
+                      Text(
+                        'Vibrate when the timer is almost over',
+                        style: TextStyle(fontSize: 14, color: Colors.white70),
+                      ),
                     ],
-                  )),
+                  ),
+                  Checkbox(
+                      value: PersistenceManager.prefs
+                              .getBool('isVibrationActive') ??
+                          false,
+                      side: MaterialStateBorderSide.resolveWith(
+                          (states) => const BorderSide(color: Colors.white)),
+                      activeColor: Colors.grey[800],
+                      checkColor: Colors.amber[600],
+                      onChanged: (bool? checkboxChanged) async {
+                        if (VibrationManager.hasVibration) {
+                          setState(() {
+                            isVibrationActive = checkboxChanged!;
+                          });
+                          // Save the value to the shared preferences
+                          PersistenceManager.prefs
+                              .setBool('isVibrationActive', checkboxChanged!);
+                          VibrationManager.isVibrating = checkboxChanged;
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                backgroundColor: Colors.grey[900],
+                                title: const Text("Information",
+                                    style: TextStyle(color: Colors.white)),
+                                content: const Text(
+                                    "Vibration is not available on this device",
+                                    style: TextStyle(color: Colors.white70)),
+                                actions: <Widget>[
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        "OK",
+                                        style:
+                                            TextStyle(color: Colors.amber[600]),
+                                      ))
+                                ]),
+                          );
+                        }
+                      })
+                ],
+              ),
             )
           ],
         ),

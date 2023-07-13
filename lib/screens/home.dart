@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:stopwatch_lafay/models/timer_entity.dart';
+import 'package:stopwatch_lafay/utils/persistence_manager.dart';
 import 'package:stopwatch_lafay/utils/ring_manager.dart';
 import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 import 'package:stopwatch_lafay/widgets/home_app_bar.dart';
@@ -39,15 +40,17 @@ class HomeState extends State<Home> {
     6: false
   };
 
-  // "device persistent storage using plugins like shared preferences"
-  List<TimerEntity> timers = [
-    TimerEntity(7),
-    TimerEntity(60),
-    TimerEntity(90),
-    TimerEntity(120),
-    TimerEntity(180),
-    TimerEntity(240),
-  ];
+  // list of timers
+  List<TimerEntity> timers = List.filled(6, TimerEntity(0), growable: false);
+
+  void loadTimersFromPersistence() {
+    setState(() {
+      for (var i = 0; i < timers.length; i++) {
+        timers[i] =
+            TimerEntity(PersistenceManager.prefs.getInt('timer${i + 1}') ?? 0);
+      }
+    });
+  }
 
   int whichRepButtonIsPressed() {
     for (var i = 0; i < reps.length; i++) {
@@ -86,7 +89,7 @@ class HomeState extends State<Home> {
           await RingManager.pool.play(RingManager.soundId);
           setState(() {
             timerOnInSeconds--;
-            timerOn = TimerEntity(timerOnInSeconds.toDouble()).getTimer();
+            timerOn = TimerEntity(timerOnInSeconds).getTimer();
 
             // if the user has enabled vibration
             if (VibrationManager.isVibrating) {
@@ -100,7 +103,7 @@ class HomeState extends State<Home> {
         } else {
           setState(() {
             timerOnInSeconds--;
-            timerOn = TimerEntity(timerOnInSeconds.toDouble()).getTimer();
+            timerOn = TimerEntity(timerOnInSeconds).getTimer();
           });
         }
       },
@@ -120,6 +123,11 @@ class HomeState extends State<Home> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _timer.cancel();
@@ -129,9 +137,14 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    loadTimersFromPersistence();
+
     return Scaffold(
         backgroundColor: Colors.grey[900],
-        appBar: const HomeAppBar(),
+        appBar: HomeAppBar(
+          timers: timers,
+          onPop: () => loadTimersFromPersistence(),
+        ),
         body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.stretch,
