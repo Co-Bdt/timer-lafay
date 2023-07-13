@@ -6,7 +6,7 @@ class RingManager {
   static late AudioSession session;
 
   static Soundpool pool = Soundpool.fromOptions(
-      options: const SoundpoolOptions(streamType: StreamType.ring));
+      options: const SoundpoolOptions(streamType: StreamType.music));
 
   static const ring =
       'packages/stopwatch_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav';

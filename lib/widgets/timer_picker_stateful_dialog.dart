@@ -14,7 +14,7 @@ class TimerPickerDialog extends StatefulWidget {
 class TimerPickerDialogState extends State<TimerPickerDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late Duration _timerDuration;
+  Duration _timerDuration = Duration.zero;
   bool textVisible = false;
 
   @override
@@ -27,6 +27,7 @@ class TimerPickerDialogState extends State<TimerPickerDialog> {
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
+        backgroundColor: Colors.grey[900],
         content: Form(
           key: _formKey,
           child: DurationPicker(
@@ -39,7 +40,8 @@ class TimerPickerDialogState extends State<TimerPickerDialog> {
             baseUnit: BaseUnit.second,
           ),
         ),
-        title: Text('Chrono ${widget.timerNumber}'),
+        title: Text('Timer ${widget.timerNumber}',
+            style: const TextStyle(color: Colors.white)),
         actions: <Widget>[
           Center(
             child: Visibility(
@@ -48,31 +50,29 @@ class TimerPickerDialogState extends State<TimerPickerDialog> {
               maintainAnimation: true,
               maintainState: true,
               replacement: const SizedBox.shrink(),
-              child: const Text(
-                'Le chrono doit être d\'au moins 5 secondes',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 12,
+              child: const Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                child: Text(
+                  'The stopwatch must be at least 5 seconds long',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  if (_timerDuration.inSeconds >= 5) {
-                    Navigator.of(context).pop(_timerDuration);
-                  } else {
-                    setState(() {
-                      textVisible = true;
-                    });
-                  }
-                },
-              ),
-            ],
+          ElevatedButton(
+            child: const Text('OK'),
+            onPressed: () {
+              if (_timerDuration.inSeconds >= 5) {
+                Navigator.of(context).pop(_timerDuration);
+              } else {
+                setState(() {
+                  textVisible = true;
+                });
+              }
+            },
           ),
         ],
       );

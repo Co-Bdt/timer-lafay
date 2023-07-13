@@ -1,17 +1,17 @@
 class TimerEntity {
-  double duration;
+  int duration;
 
   TimerEntity(this.duration);
 
   String getTimer() {
-    double minutes = (duration ~/ 60).toDouble();
-    double minutesDouble = duration / 60;
-    double minutesDifference = minutesDouble - minutes;
+    int minutes = (duration ~/ 60);
+    double minutesDouble = (duration / 60);
+    double minutesDifference = (minutesDouble - minutes);
 
     if (minutes >= 1) {
       //higher than a min
       if (minutesDifference != 0) {
-        return '${removeDecimalZeroFormat(minutes)}\'${removeDecimalZeroFormat(minutesDifference * 60)}"';
+        return '${removeDecimalZeroFormat(minutes)}\'${removeDecimalZeroFormat((minutesDifference * 60).toInt())}"';
       } else {
         return '${removeDecimalZeroFormat(minutes)}\'';
       }
@@ -21,7 +21,7 @@ class TimerEntity {
     }
   }
 
-  String removeDecimalZeroFormat(double n) {
+  String removeDecimalZeroFormat(int n) {
     return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 1);
   }
 }

@@ -8,10 +8,11 @@ import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   PersistenceManager.configureSharedPreferences();
+
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   RingManager.configureAudioSession();
   RingManager.loadRing();
