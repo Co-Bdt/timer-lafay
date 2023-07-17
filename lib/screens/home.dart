@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   // object to manage the countdown
-  late Timer _timer;
+  Timer _timer = Timer(Duration.zero, () {});
   // boolean to know whether the stopwatch is on or not
   bool isStopwatchOn = false;
   // string that contain the timer currently running in 00'00" format
@@ -44,10 +44,19 @@ class HomeState extends State<Home> {
   List<TimerEntity> timers = List.filled(6, TimerEntity(0), growable: false);
 
   void loadTimersFromPersistence() {
+    Map<int, int> defaultTimers = {
+      1: 25,
+      2: 60,
+      3: 90,
+      4: 120,
+      5: 180,
+      6: 300,
+    };
     setState(() {
       for (var i = 0; i < timers.length; i++) {
-        timers[i] =
-            TimerEntity(PersistenceManager.prefs.getInt('timer${i + 1}') ?? 0);
+        timers[i] = TimerEntity(
+            PersistenceManager.prefs.getInt('timer${i + 1}') ??
+                defaultTimers[i + 1]!);
       }
     });
   }
@@ -130,7 +139,7 @@ class HomeState extends State<Home> {
   @override
   void dispose() {
     super.dispose();
-    _timer.cancel();
+    if (_timer.isActive) _timer.cancel();
     player.dispose();
     RingManager.pool.release();
   }

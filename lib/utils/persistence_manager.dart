@@ -4,7 +4,7 @@ class PersistenceManager {
   // Obtain shared preferences.
   static late SharedPreferences prefs;
 
-  static configureSharedPreferences() async {
+  static Future<void> configureSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
   }
 }
