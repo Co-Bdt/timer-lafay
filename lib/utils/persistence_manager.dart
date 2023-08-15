@@ -1,10 +1,19 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stopwatch_lafay/utils/shared_preferences_singleton.dart';
 
 class PersistenceManager {
-  // Obtain shared preferences.
-  static late SharedPreferences prefs;
+  static SharedPreferencesSingleton? sharedPreferencesInstance;
 
-  static Future<void> configureSharedPreferences() async {
-    prefs = await SharedPreferences.getInstance();
+  static initializeSharedPreferences() async {
+    sharedPreferencesInstance = await SharedPreferencesSingleton.getInstance();
+  }
+
+  // Function to store a value in shared preferences
+  static void store(String key, String value) async {
+    sharedPreferencesInstance?.sharedPreferences.setString(key, value);
+  }
+
+  // Function to get a value from shared preferences
+  static String get(String key) {
+    return sharedPreferencesInstance?.sharedPreferences.getString(key) ?? "";
   }
 }

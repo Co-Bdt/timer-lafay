@@ -18,6 +18,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  bool isLoaded = false;
   // object to manage the countdown
   Timer _timer = Timer(Duration.zero, () {});
   // boolean to know whether the stopwatch is on or not
@@ -28,7 +29,6 @@ class HomeState extends State<Home> {
   int timerOnInSeconds = 0;
   // object to play sounds from assets
   final player = audio_player.AudioPlayer();
-
   // number of reps
   Map<num, bool> reps = {
     0: true,
@@ -39,11 +39,21 @@ class HomeState extends State<Home> {
     5: false,
     6: false
   };
-
   // list of timers
   List<TimerEntity> timers = List.filled(6, TimerEntity(0), growable: false);
 
-  void loadTimersFromPersistence() {
+  void loadGlobalUtils() async {
+    await PersistenceManager.initializeSharedPreferences();
+    // await RingManager.initialize();
+    // await VibrationManager.initialize();
+    setState(() {
+      isLoaded = true;
+    });
+  }
+
+  void loadTimersFromPersistence() async {
+    // PersistenceManager persistenceManager =
+    //     await PersistenceManager.getInstance();
     Map<int, int> defaultTimers = {
       1: 25,
       2: 60,
@@ -54,9 +64,9 @@ class HomeState extends State<Home> {
     };
     setState(() {
       for (var i = 0; i < timers.length; i++) {
-        timers[i] = TimerEntity(
-            PersistenceManager.prefs.getInt('timer${i + 1}') ??
-                defaultTimers[i + 1]!);
+        var value = PersistenceManager.get('timer${i + 1}');
+        timers[i] =
+            TimerEntity(value != "" ? int.parse(value) : defaultTimers[i + 1]!);
       }
     });
   }
@@ -133,6 +143,7 @@ class HomeState extends State<Home> {
 
   @override
   void initState() {
+    loadGlobalUtils();
     super.initState();
   }
 
@@ -146,178 +157,183 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    loadTimersFromPersistence();
-
-    return Scaffold(
-        backgroundColor: Colors.grey[900],
-        appBar: HomeAppBar(
-          timers: timers,
-          onPop: () => loadTimersFromPersistence(),
-        ),
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                flex: 8,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      RepElevatedButton(
-                          number: '0',
-                          press: reps[0],
-                          pressRepButton: () {
-                            pressRepButton(0);
-                          }),
-                      RepElevatedButton(
-                          number: '1',
-                          press: reps[1],
-                          pressRepButton: () {
-                            pressRepButton(1);
-                          }),
-                      RepElevatedButton(
-                          number: '2',
-                          press: reps[2],
-                          pressRepButton: () {
-                            pressRepButton(2);
-                          }),
-                      RepElevatedButton(
-                          number: '3',
-                          press: reps[3],
-                          pressRepButton: () {
-                            pressRepButton(3);
-                          }),
-                      RepElevatedButton(
-                          number: '4',
-                          press: reps[4],
-                          pressRepButton: () {
-                            pressRepButton(4);
-                          }),
-                      RepElevatedButton(
-                          number: '5',
-                          press: reps[5],
-                          pressRepButton: () {
-                            pressRepButton(5);
-                          }),
-                      RepElevatedButton(
-                          number: '6',
-                          press: reps[6],
-                          pressRepButton: () {
-                            pressRepButton(6);
-                          }),
-                    ],
+    if (!isLoaded) {
+      return Container(
+          color: Colors.white,
+          child: const Center(child: CircularProgressIndicator()));
+    } else {
+      loadTimersFromPersistence();
+      return Scaffold(
+          backgroundColor: Colors.grey[900],
+          appBar: HomeAppBar(
+            timers: timers,
+            onPop: () => loadTimersFromPersistence(),
+          ),
+          body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  flex: 8,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        RepElevatedButton(
+                            number: '0',
+                            press: reps[0],
+                            pressRepButton: () {
+                              pressRepButton(0);
+                            }),
+                        RepElevatedButton(
+                            number: '1',
+                            press: reps[1],
+                            pressRepButton: () {
+                              pressRepButton(1);
+                            }),
+                        RepElevatedButton(
+                            number: '2',
+                            press: reps[2],
+                            pressRepButton: () {
+                              pressRepButton(2);
+                            }),
+                        RepElevatedButton(
+                            number: '3',
+                            press: reps[3],
+                            pressRepButton: () {
+                              pressRepButton(3);
+                            }),
+                        RepElevatedButton(
+                            number: '4',
+                            press: reps[4],
+                            pressRepButton: () {
+                              pressRepButton(4);
+                            }),
+                        RepElevatedButton(
+                            number: '5',
+                            press: reps[5],
+                            pressRepButton: () {
+                              pressRepButton(5);
+                            }),
+                        RepElevatedButton(
+                            number: '6',
+                            press: reps[6],
+                            pressRepButton: () {
+                              pressRepButton(6);
+                            }),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              if (!isStopwatchOn) ...[
-                Flexible(
+                if (!isStopwatchOn) ...[
+                  Flexible(
+                      flex: 14,
+                      fit: FlexFit.tight,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TimerElevatedButton(
+                              timer: timers[0].getTimer(),
+                              startStopWatch: () async {
+                                startStopwatch(0);
+                              },
+                            ),
+                            TimerElevatedButton(
+                              timer: timers[1].getTimer(),
+                              startStopWatch: () {
+                                startStopwatch(1);
+                              },
+                            )
+                          ],
+                        ),
+                      )),
+                  Flexible(
+                      flex: 14,
+                      fit: FlexFit.tight,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TimerElevatedButton(
+                              timer: timers[2].getTimer(),
+                              startStopWatch: () {
+                                startStopwatch(2);
+                              },
+                            ),
+                            TimerElevatedButton(
+                              timer: timers[3].getTimer(),
+                              startStopWatch: () {
+                                startStopwatch(3);
+                              },
+                            ),
+                          ],
+                        ),
+                      )),
+                  Flexible(
                     flex: 14,
                     fit: FlexFit.tight,
                     child: Container(
-                      margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TimerElevatedButton(
-                            timer: timers[0].getTimer(),
-                            startStopWatch: () async {
-                              startStopwatch(0);
-                            },
-                          ),
-                          TimerElevatedButton(
-                            timer: timers[1].getTimer(),
-                            startStopWatch: () {
-                              startStopwatch(1);
-                            },
-                          )
-                        ],
-                      ),
-                    )),
-                Flexible(
-                    flex: 14,
-                    fit: FlexFit.tight,
+                        margin: const EdgeInsets.fromLTRB(5, 5, 5, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TimerElevatedButton(
+                              timer: timers[4].getTimer(),
+                              startStopWatch: () {
+                                startStopwatch(4);
+                              },
+                            ),
+                            TimerElevatedButton(
+                              timer: timers[5].getTimer(),
+                              startStopWatch: () {
+                                startStopwatch(5);
+                              },
+                            )
+                          ],
+                        )),
+                  ),
+                ],
+                if (isStopwatchOn) ...[
+                  Expanded(
+                    flex: 21,
                     child: Container(
-                      margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TimerElevatedButton(
-                            timer: timers[2].getTimer(),
-                            startStopWatch: () {
-                              startStopwatch(2);
-                            },
-                          ),
-                          TimerElevatedButton(
-                            timer: timers[3].getTimer(),
-                            startStopWatch: () {
-                              startStopwatch(3);
-                            },
-                          ),
-                        ],
-                      ),
-                    )),
-                Flexible(
-                  flex: 14,
-                  fit: FlexFit.tight,
-                  child: Container(
-                      margin: const EdgeInsets.fromLTRB(5, 5, 5, 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TimerElevatedButton(
-                            timer: timers[4].getTimer(),
-                            startStopWatch: () {
-                              startStopwatch(4);
-                            },
-                          ),
-                          TimerElevatedButton(
-                            timer: timers[5].getTimer(),
-                            startStopWatch: () {
-                              startStopwatch(5);
-                            },
-                          )
-                        ],
-                      )),
-                ),
-              ],
-              if (isStopwatchOn) ...[
-                Expanded(
-                  flex: 21,
-                  child: Container(
-                      alignment: Alignment.center,
-                      child: (Text(
-                        timerOn,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 60),
-                      ))),
-                ),
-                Expanded(
-                  flex: 21,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _timer.cancel();
-                          isStopwatchOn = false;
-                          if (reps[0] != true) {
-                            pressRepButton(whichRepButtonIsPressed() + 1);
-                          }
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[900],
-                      ),
-                      child: const Text(
-                        'STOP',
-                        style: TextStyle(fontSize: 40),
-                      )),
-                ),
-              ],
-            ]));
+                        alignment: Alignment.center,
+                        child: (Text(
+                          timerOn,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 60),
+                        ))),
+                  ),
+                  Expanded(
+                    flex: 21,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _timer.cancel();
+                            isStopwatchOn = false;
+                            if (reps[0] != true) {
+                              pressRepButton(whichRepButtonIsPressed() + 1);
+                            }
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red[900],
+                        ),
+                        child: const Text(
+                          'STOP',
+                          style: TextStyle(fontSize: 40),
+                        )),
+                  ),
+                ],
+              ]));
+    }
   }
 }

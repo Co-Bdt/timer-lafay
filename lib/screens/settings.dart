@@ -3,6 +3,7 @@ import 'package:stopwatch_lafay/models/timer_entity.dart';
 import 'package:stopwatch_lafay/utils/persistence_manager.dart';
 import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 import 'package:stopwatch_lafay/widgets/timer_picker_button.dart';
+import 'package:stopwatch_lafay/utils/string_extension.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -13,7 +14,6 @@ class Settings extends StatefulWidget {
 
 class SettingsState extends State<Settings> {
   bool isVibrationActive = false;
-
   List<TimerEntity> durations = [];
 
   void loadTimers(Map args) {
@@ -92,9 +92,8 @@ class SettingsState extends State<Settings> {
                     ],
                   ),
                   Checkbox(
-                      value: PersistenceManager.prefs
-                              .getBool('isVibrationActive') ??
-                          false,
+                      value: (PersistenceManager.get('isVibrationActive'))
+                          .toBoolean(),
                       side: MaterialStateBorderSide.resolveWith(
                           (states) => const BorderSide(color: Colors.white)),
                       activeColor: Colors.grey[800],
@@ -105,9 +104,9 @@ class SettingsState extends State<Settings> {
                             isVibrationActive = checkboxChanged!;
                           });
                           // Save the value to the shared preferences
-                          PersistenceManager.prefs
-                              .setBool('isVibrationActive', checkboxChanged!);
-                          VibrationManager.isVibrating = checkboxChanged;
+                          PersistenceManager.store(
+                              'isVibrationActive', checkboxChanged.toString());
+                          VibrationManager.isVibrating = checkboxChanged!;
                         } else {
                           showDialog(
                             context: context,

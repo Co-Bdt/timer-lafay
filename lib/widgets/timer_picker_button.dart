@@ -65,8 +65,8 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
                 setState(() {
                   _timerDuration = result;
                 });
-                PersistenceManager.prefs
-                    .setInt('timer${widget.timerNumber}', result.inSeconds);
+                PersistenceManager.store(
+                    'timer${widget.timerNumber}', result.inSeconds.toString());
               }
             },
             icon: const Icon(
