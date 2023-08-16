@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:stopwatch_lafay/models/timer_entity.dart';
 import 'package:stopwatch_lafay/utils/persistence_manager.dart';
 import 'package:stopwatch_lafay/utils/ring_manager.dart';
+import 'package:stopwatch_lafay/utils/string_extension.dart';
 import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 import 'package:stopwatch_lafay/widgets/home_app_bar.dart';
 import 'package:stopwatch_lafay/widgets/rep_elevated_button.dart';
 import 'package:stopwatch_lafay/widgets/timer_elevated_button.dart';
-import 'package:audioplayers/audioplayers.dart' as audio_player;
 import 'package:vibration/vibration.dart';
 
 class Home extends StatefulWidget {
@@ -27,8 +27,6 @@ class HomeState extends State<Home> {
   String timerOn = '';
   // integer that contain the timer currently running in seconds format
   int timerOnInSeconds = 0;
-  // object to play sounds from assets
-  final player = audio_player.AudioPlayer();
   // number of reps
   Map<num, bool> reps = {
     0: true,
@@ -44,16 +42,17 @@ class HomeState extends State<Home> {
 
   void loadGlobalUtils() async {
     await PersistenceManager.initializeSharedPreferences();
-    // await RingManager.initialize();
-    // await VibrationManager.initialize();
+    RingManager.configureAudioSession();
+    RingManager.loadRing();
+    VibrationManager.configureVibration();
+    loadUsersPreferences();
+
     setState(() {
       isLoaded = true;
     });
   }
 
-  void loadTimersFromPersistence() async {
-    // PersistenceManager persistenceManager =
-    //     await PersistenceManager.getInstance();
+  void loadUsersPreferences() {
     Map<int, int> defaultTimers = {
       1: 25,
       2: 60,
@@ -69,6 +68,8 @@ class HomeState extends State<Home> {
             TimerEntity(value != "" ? int.parse(value) : defaultTimers[i + 1]!);
       }
     });
+    VibrationManager.isVibrationEnabled =
+        PersistenceManager.get('isVibrationActive').toBoolean();
   }
 
   int whichRepButtonIsPressed() {
@@ -100,26 +101,27 @@ class HomeState extends State<Home> {
       (Timer timer) async {
         if (timerOnInSeconds == 0) {
           await RingManager.session.setActive(false);
+
           setState(() {
             timer.cancel();
             isStopwatchOn = false;
           });
-        } else if (timerOnInSeconds < 7 && timerOnInSeconds > 1) {
-          await RingManager.pool.play(RingManager.soundId);
-          setState(() {
-            timerOnInSeconds--;
-            timerOn = TimerEntity(timerOnInSeconds).getTimer();
+        } else {
+          if (timerOnInSeconds < 7 && timerOnInSeconds > 1) {
+            await RingManager.pool.play(RingManager.soundId);
 
             // if the user has enabled vibration
-            if (VibrationManager.isVibrating) {
+            if (VibrationManager.isVibrationEnabled) {
               if (VibrationManager.hasAmplitudeControl) {
                 Vibration.vibrate(duration: 250, amplitude: 128);
               } else {
                 Vibration.vibrate(duration: 250);
               }
             }
-          });
-        } else {
+          } else if (timerOnInSeconds == 7) {
+            await RingManager.pool.play(RingManager.soundId);
+          }
+
           setState(() {
             timerOnInSeconds--;
             timerOn = TimerEntity(timerOnInSeconds).getTimer();
@@ -149,10 +151,9 @@ class HomeState extends State<Home> {
 
   @override
   void dispose() {
-    super.dispose();
     if (_timer.isActive) _timer.cancel();
-    player.dispose();
     RingManager.pool.release();
+    super.dispose();
   }
 
   @override
@@ -162,12 +163,11 @@ class HomeState extends State<Home> {
           color: Colors.white,
           child: const Center(child: CircularProgressIndicator()));
     } else {
-      loadTimersFromPersistence();
       return Scaffold(
           backgroundColor: Colors.grey[900],
           appBar: HomeAppBar(
             timers: timers,
-            onPop: () => loadTimersFromPersistence(),
+            onPop: () => loadUsersPreferences(),
           ),
           body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

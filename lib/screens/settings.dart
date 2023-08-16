@@ -106,7 +106,8 @@ class SettingsState extends State<Settings> {
                           // Save the value to the shared preferences
                           PersistenceManager.store(
                               'isVibrationActive', checkboxChanged.toString());
-                          VibrationManager.isVibrating = checkboxChanged!;
+                          VibrationManager.isVibrationEnabled =
+                              checkboxChanged!;
                         } else {
                           showDialog(
                             context: context,

@@ -6,7 +6,7 @@ class VibrationManager {
   // static Vibration vibration = Vibration();
   static late bool hasAmplitudeControl;
   // store the vibration status
-  static bool isVibrating = false;
+  static bool isVibrationEnabled = false;
 
   static configureVibration() async {
     // check if the device has vibration capabilities

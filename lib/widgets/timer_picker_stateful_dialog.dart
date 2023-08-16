@@ -27,7 +27,7 @@ class TimerPickerDialogState extends State<TimerPickerDialog> {
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.grey[800],
         content: Form(
           key: _formKey,
           child: DurationPicker(
@@ -53,7 +53,7 @@ class TimerPickerDialogState extends State<TimerPickerDialog> {
               child: const Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                 child: Text(
-                  'The stopwatch must be at least 5 seconds long',
+                  'The stopwatch must be at least 7 seconds long',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 12,
@@ -65,7 +65,7 @@ class TimerPickerDialogState extends State<TimerPickerDialog> {
           ElevatedButton(
             child: const Text('OK'),
             onPressed: () {
-              if (_timerDuration.inSeconds >= 5) {
+              if (_timerDuration.inSeconds >= 7) {
                 Navigator.of(context).pop(_timerDuration);
               } else {
                 setState(() {
