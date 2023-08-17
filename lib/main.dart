@@ -13,9 +13,27 @@ void main() async {
     MaterialApp(
         debugShowCheckedModeBanner: false, // to be removed in production
         initialRoute: '/home',
-        routes: {
-          '/home': (context) => const Home(),
-          '/settings': (context) => const Settings(),
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case '/home':
+              return PageRouteBuilder(
+                  settings:
+                      settings, // pass this to make popUntil(), pushNamedAndRemoveUntil(), works
+                  pageBuilder: (_, __, ___) => const Home(),
+                  transitionsBuilder: (_, a, __, c) =>
+                      FadeTransition(opacity: a, child: c));
+            case '/settings':
+              return PageRouteBuilder(
+                  settings:
+                      settings, // pass this to make popUntil(), pushNamedAndRemoveUntil(), works
+                  pageBuilder: (_, __, ___) => const Settings(),
+                  transitionsBuilder: (_, a, __, c) => SlideTransition(
+                      position:
+                          Tween(begin: const Offset(1, 0), end: Offset.zero)
+                              .animate(a),
+                      child: c));
+          }
+          return null;
         },
         theme: ThemeData(
           colorScheme: ColorScheme.dark(

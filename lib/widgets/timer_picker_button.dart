@@ -69,16 +69,16 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
 
               if (!mounted) return;
               if (resultingDuration != null) {
-                if (resultingDuration.inSeconds < 7) {
+                if (resultingDuration.inSeconds < 6) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(
-                      'Duration must be at least 7 seconds',
+                      'Duration must be at least 6 seconds',
                       style: TextStyle(
                           color: Colors.red[700], fontWeight: FontWeight.bold),
                     ),
-                    backgroundColor: Colors.grey[800],
+                    backgroundColor: Colors.grey[700],
                   ));
-                  resultingDuration = const Duration(seconds: 7);
+                  resultingDuration = const Duration(seconds: 6);
                 }
                 setState(() {
                   _timerDuration = resultingDuration!;
