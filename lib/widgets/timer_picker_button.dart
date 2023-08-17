@@ -1,7 +1,7 @@
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:stopwatch_lafay/models/timer_entity.dart';
 import 'package:stopwatch_lafay/utils/persistence_manager.dart';
-import 'package:stopwatch_lafay/widgets/timer_picker_stateful_dialog.dart';
 
 class TimerPickerButton extends StatefulWidget {
   final num timerNumber;
@@ -54,26 +54,39 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
             ],
           ),
           IconButton(
-            onPressed: () async {
-              final Duration? result = await showDialog(
-                  context: context,
-                  builder: (context) {
-                    return TimerPickerDialog(
-                        widget.timerNumber, _timerDuration);
-                  });
-              if (result != null) {
-                setState(() {
-                  _timerDuration = result;
-                });
-                PersistenceManager.store(
-                    'timer${widget.timerNumber}', result.inSeconds.toString());
-              }
-            },
+            tooltip: 'Edit timer',
             icon: const Icon(
               Icons.edit_outlined,
               size: 30,
               color: Colors.white,
             ),
+            onPressed: () async {
+              var resultingDuration = await showDurationPicker(
+                context: context,
+                initialTime: _timerDuration,
+                baseUnit: BaseUnit.second,
+              );
+
+              if (!mounted) return;
+              if (resultingDuration != null) {
+                if (resultingDuration.inSeconds < 7) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      'Duration must be at least 7 seconds',
+                      style: TextStyle(
+                          color: Colors.red[700], fontWeight: FontWeight.bold),
+                    ),
+                    backgroundColor: Colors.grey[800],
+                  ));
+                  resultingDuration = const Duration(seconds: 7);
+                }
+                setState(() {
+                  _timerDuration = resultingDuration!;
+                });
+                PersistenceManager.store('timer${widget.timerNumber}',
+                    resultingDuration.inSeconds.toString());
+              }
+            },
           )
         ],
       ),

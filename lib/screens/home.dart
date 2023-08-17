@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:stopwatch_lafay/models/timer_entity.dart';
 import 'package:stopwatch_lafay/utils/persistence_manager.dart';
 import 'package:stopwatch_lafay/utils/ring_manager.dart';
-import 'package:stopwatch_lafay/utils/string_extension.dart';
+import 'package:stopwatch_lafay/utils/extensions.dart';
 import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 import 'package:stopwatch_lafay/widgets/home_app_bar.dart';
 import 'package:stopwatch_lafay/widgets/rep_elevated_button.dart';
@@ -118,8 +118,6 @@ class HomeState extends State<Home> {
                 Vibration.vibrate(duration: 250);
               }
             }
-          } else if (timerOnInSeconds == 7) {
-            await RingManager.pool.play(RingManager.soundId);
           }
 
           setState(() {
@@ -131,11 +129,11 @@ class HomeState extends State<Home> {
     );
   }
 
-  startStopwatch(int timer) {
+  startStopwatch(int timerIndex) {
     setState(() {
       isStopwatchOn = true;
-      timerOn = timers[timer].getTimer();
-      timerOnInSeconds = timers[timer].duration.toInt();
+      timerOn = timers[timerIndex].getTimer();
+      timerOnInSeconds = timers[timerIndex].duration.toInt();
       if (whichRepButtonIsPressed() != 0) {
         pressRepButton(whichRepButtonIsPressed() - 1);
       }

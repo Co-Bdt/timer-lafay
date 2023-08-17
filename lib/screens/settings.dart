@@ -3,7 +3,7 @@ import 'package:stopwatch_lafay/models/timer_entity.dart';
 import 'package:stopwatch_lafay/utils/persistence_manager.dart';
 import 'package:stopwatch_lafay/utils/vibration_manager.dart';
 import 'package:stopwatch_lafay/widgets/timer_picker_button.dart';
-import 'package:stopwatch_lafay/utils/string_extension.dart';
+import 'package:stopwatch_lafay/utils/extensions.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});

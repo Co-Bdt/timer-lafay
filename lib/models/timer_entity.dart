@@ -11,7 +11,7 @@ class TimerEntity {
     if (minutes >= 1) {
       //higher than a min
       if (minutesDifference != 0) {
-        return '${(minutes)}\'${((minutesDifference * 60).toInt())}"';
+        return '${(minutes)}\'${((minutesDifference * 60).round())}"';
       } else {
         return '${(minutes)}\'';
       }

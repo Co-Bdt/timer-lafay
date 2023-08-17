@@ -9,11 +9,20 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  runApp(MaterialApp(
-    initialRoute: '/home',
-    routes: {
-      '/home': (context) => const Home(),
-      '/settings': (context) => const Settings(),
-    },
-  ));
+  runApp(
+    MaterialApp(
+        debugShowCheckedModeBanner: false, // to be removed in production
+        initialRoute: '/home',
+        routes: {
+          '/home': (context) => const Home(),
+          '/settings': (context) => const Settings(),
+        },
+        theme: ThemeData(
+          colorScheme: ColorScheme.dark(
+            primary: Colors.white,
+            secondary: Colors.amber[600]!,
+            onPrimary: Colors.white, // text color
+          ),
+        )),
+  );
 }
