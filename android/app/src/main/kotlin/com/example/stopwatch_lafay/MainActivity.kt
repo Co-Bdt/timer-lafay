@@ -1,4 +1,4 @@
-package com.example.stopwatch_lafay
+package com.example.timer_lafay
 
 import io.flutter.embedding.android.FlutterActivity
 

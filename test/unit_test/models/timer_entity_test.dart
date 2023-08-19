@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:stopwatch_lafay/models/timer_entity.dart';
+import 'package:timer_lafay/models/timer_entity.dart';
 
 void main() {
   group('Test getTimer function', () {

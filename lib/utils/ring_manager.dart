@@ -9,7 +9,7 @@ class RingManager {
       options: const SoundpoolOptions(streamType: StreamType.music));
 
   static const ring =
-      'packages/stopwatch_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav';
+      'packages/timer_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav';
   static int soundId = 0;
 
   static Future<AudioSession> configureAudioSession() async {

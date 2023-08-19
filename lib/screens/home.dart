@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:stopwatch_lafay/models/timer_entity.dart';
-import 'package:stopwatch_lafay/utils/persistence_manager.dart';
-import 'package:stopwatch_lafay/utils/ring_manager.dart';
-import 'package:stopwatch_lafay/utils/extensions.dart';
-import 'package:stopwatch_lafay/utils/vibration_manager.dart';
-import 'package:stopwatch_lafay/widgets/home_app_bar.dart';
-import 'package:stopwatch_lafay/widgets/rep_elevated_button.dart';
-import 'package:stopwatch_lafay/widgets/timer_elevated_button.dart';
+import 'package:timer_lafay/models/timer_entity.dart';
+import 'package:timer_lafay/utils/persistence_manager.dart';
+import 'package:timer_lafay/utils/ring_manager.dart';
+import 'package:timer_lafay/utils/extensions.dart';
+import 'package:timer_lafay/utils/vibration_manager.dart';
+import 'package:timer_lafay/widgets/home_app_bar.dart';
+import 'package:timer_lafay/widgets/rep_elevated_button.dart';
+import 'package:timer_lafay/widgets/timer_elevated_button.dart';
 import 'package:vibration/vibration.dart';
 
 class Home extends StatefulWidget {

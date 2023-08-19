@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:stopwatch_lafay/screens/home.dart';
-import 'package:stopwatch_lafay/screens/settings.dart';
+import 'package:timer_lafay/screens/home.dart';
+import 'package:timer_lafay/screens/settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,6 +1,6 @@
 {
-    "name": "stopwatch_lafay",
-    "short_name": "stopwatch_lafay",
+    "name": "timer_lafay",
+    "short_name": "timer_lafay",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

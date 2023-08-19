@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:stopwatch_lafay/models/timer_entity.dart';
-import 'package:stopwatch_lafay/utils/persistence_manager.dart';
-import 'package:stopwatch_lafay/utils/vibration_manager.dart';
-import 'package:stopwatch_lafay/widgets/timer_picker_button.dart';
-import 'package:stopwatch_lafay/utils/extensions.dart';
+import 'package:timer_lafay/models/timer_entity.dart';
+import 'package:timer_lafay/utils/persistence_manager.dart';
+import 'package:timer_lafay/utils/vibration_manager.dart';
+import 'package:timer_lafay/widgets/timer_picker_button.dart';
+import 'package:timer_lafay/utils/extensions.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -45,7 +45,7 @@ class SettingsState extends State<Settings> {
             Container(
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
-                'Stopwatches',
+                'Timers',
                 style: TextStyle(color: Colors.amber[600], fontSize: 17),
               ),
             ),

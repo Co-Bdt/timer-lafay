@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stopwatch_lafay/models/timer_entity.dart';
+import 'package:timer_lafay/models/timer_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -31,7 +31,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        'Stopwatch Lafay',
+        'Timer Lafay',
         style: TextStyle(color: Colors.white),
       ),
       backgroundColor: Colors.grey[900],

@@ -1,3 +1,3 @@
-# Stopwatch Lafay
+# Timer Lafay
 
-My remake of a sport stopwatch application "Chrono Lafay" not available anymore, in order to practice Flutter.
+My remake of a sport timer application "Chrono Lafay" not available anymore, in order to practice Flutter.

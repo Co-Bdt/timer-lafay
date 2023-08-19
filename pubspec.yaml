@@ -1,5 +1,5 @@
-name: stopwatch_lafay
-description: A simple sport stopwatch app for the Lafay method
+name: timer_lafay
+description: An easy to use timer app for any kind of workout heavily inspired by the Lafay method.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -36,4 +36,4 @@ flutter:
   uses-material-design: true
   
   assets:
-    - packages/stopwatch_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav
+    - packages/timer_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav

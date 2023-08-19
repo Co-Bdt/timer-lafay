@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stopwatch_lafay/utils/persistence_manager.dart';
+import 'package:timer_lafay/utils/persistence_manager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

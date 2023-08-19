@@ -1,4 +1,4 @@
-import 'package:stopwatch_lafay/utils/shared_preferences_singleton.dart';
+import 'package:timer_lafay/utils/shared_preferences_singleton.dart';
 
 class PersistenceManager {
   static SharedPreferencesSingleton? sharedPreferencesInstance;
