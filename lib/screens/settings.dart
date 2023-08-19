@@ -26,7 +26,7 @@ class SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    // extract the arguments from the current ModalRoute settings and pass them
+    // Extract the arguments from the current ModalRoute settings and pass them
     loadTimers(ModalRoute.of(context)!.settings.arguments as Map);
 
     return Scaffold(

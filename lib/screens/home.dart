@@ -19,15 +19,15 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   bool isLoaded = false;
-  // object to manage the countdown
+  // Object to manage the countdown
   Timer _timer = Timer(Duration.zero, () {});
-  // boolean to know whether the stopwatch is on or not
+  // Boolean to know whether the stopwatch is on or not
   bool isStopwatchOn = false;
-  // string that contain the timer currently running in 00'00" format
+  // String that contain the timer currently running in 00'00" format
   String timerOn = '';
-  // integer that contain the timer currently running in seconds format
+  // Integer that contain the timer currently running in seconds format
   int timerOnInSeconds = 0;
-  // number of reps
+  // Number of reps
   Map<num, bool> reps = {
     0: true,
     1: false,
@@ -37,7 +37,7 @@ class HomeState extends State<Home> {
     5: false,
     6: false
   };
-  // list of timers
+  // List of timers
   List<TimerEntity> timers = List.filled(6, TimerEntity(0), growable: false);
 
   void loadGlobalUtils() async {
@@ -46,6 +46,9 @@ class HomeState extends State<Home> {
     RingManager.loadRing();
     VibrationManager.configureVibration();
     loadUsersPreferences();
+
+    // Wait 0.5 second to let the circular loader quickly appear
+    await Future.delayed(const Duration(milliseconds: 500));
 
     setState(() {
       isLoaded = true;
@@ -110,7 +113,7 @@ class HomeState extends State<Home> {
           if (timerOnInSeconds < 7 && timerOnInSeconds > 1) {
             await RingManager.pool.play(RingManager.soundId);
 
-            // if the user has enabled vibration
+            // If the user has enabled vibration
             if (VibrationManager.isVibrationEnabled) {
               if (VibrationManager.hasAmplitudeControl) {
                 Vibration.vibrate(duration: 250, amplitude: 128);
@@ -158,7 +161,7 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     if (!isLoaded) {
       return Container(
-          color: Colors.white,
+          color: Colors.grey[800],
           child: const Center(child: CircularProgressIndicator()));
     } else {
       return Scaffold(

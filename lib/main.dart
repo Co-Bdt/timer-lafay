@@ -11,21 +11,21 @@ void main() async {
 
   runApp(
     MaterialApp(
-        debugShowCheckedModeBanner: false, // to be removed in production
+        debugShowCheckedModeBanner: false, // To remove debug banner
         initialRoute: '/home',
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case '/home':
               return PageRouteBuilder(
                   settings:
-                      settings, // pass this to make popUntil(), pushNamedAndRemoveUntil(), works
+                      settings, // Pass this to make popUntil(), pushNamedAndRemoveUntil(), works
                   pageBuilder: (_, __, ___) => const Home(),
                   transitionsBuilder: (_, a, __, c) =>
                       FadeTransition(opacity: a, child: c));
             case '/settings':
               return PageRouteBuilder(
                   settings:
-                      settings, // pass this to make popUntil(), pushNamedAndRemoveUntil(), works
+                      settings, // Pass this to make popUntil(), pushNamedAndRemoveUntil(), works
                   pageBuilder: (_, __, ___) => const Settings(),
                   transitionsBuilder: (_, a, __, c) => SlideTransition(
                       position:

@@ -1,5 +1,5 @@
 name: timer_lafay
-description: An easy to use timer app for any kind of workout heavily inspired by the Lafay method.
+description: An easy to use timer app for any kind of workout, heavily inspired by the Lafay method.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -15,6 +15,7 @@ dependencies:
   audio_session: ^0.1.16
   audioplayers: ^3.0.1
   flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.2
   duration_picker: ^1.1.1
   shared_preferences: ^2.2.0
   soundpool: ^2.3.0
@@ -37,3 +38,20 @@ flutter:
   
   assets:
     - packages/timer_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav
+    - packages/timer_lafay/assets/image/timer-lafay-logo.png
+
+flutter_native_splash:
+  # This package generates native code to customize Flutter's default white native splash screen
+  # with background color and splash image.
+  # Customize the parameters below, and run the following command in the terminal:
+  # dart run flutter_native_splash:create
+  # To restore Flutter's default white splash screen, run the following command in the terminal:
+  # dart run flutter_native_splash:remove
+
+  # color or background_image is the only required parameter.  Use color to set the background
+  # of your splash screen to a solid color.  Use background_image to set the background of your
+  # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
+  # size of the app. Only one parameter can be used, color and background_image cannot both be set.
+  color: "#424242"
+  # background_image: "assets/image/timer-lafay-logo.png"
+  image: assets/image/timer-lafay-logo2.png

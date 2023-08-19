@@ -1,17 +1,17 @@
 import 'package:vibration/vibration.dart';
 
 class VibrationManager {
-  // object to handle device's vibration
+  // Object to handle device's vibration
   static late bool hasVibration;
-  // static Vibration vibration = Vibration();
+  // Static Vibration vibration = Vibration();
   static late bool hasAmplitudeControl;
-  // store the vibration status
+  // Store the vibration status
   static bool isVibrationEnabled = false;
 
   static configureVibration() async {
-    // check if the device has vibration capabilities
+    // Check if the device has vibration capabilities
     hasVibration = (await Vibration.hasVibrator())!;
-    // check if the device has amplitude control
+    // Check if the device has amplitude control
     hasAmplitudeControl = (await Vibration.hasAmplitudeControl())!;
   }
 }

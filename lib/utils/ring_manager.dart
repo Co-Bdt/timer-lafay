@@ -32,7 +32,7 @@ class RingManager {
     return session;
   }
 
-  // pre-load audio file to avoid getting a delay when playing it
+  // Pre-load audio file to avoid getting a delay when playing it
   static void loadRing() async {
     soundId = await rootBundle.load(ring).then((ByteData soundData) {
       return pool.load(soundData);

@@ -9,14 +9,14 @@ class TimerEntity {
     double minutesDifference = (minutesDouble - minutes);
 
     if (minutes >= 1) {
-      //higher than a min
+      // Higher than a min
       if (minutesDifference != 0) {
         return '${(minutes)}\'${((minutesDifference * 60).round())}"';
       } else {
         return '${(minutes)}\'';
       }
     } else {
-      //lower than a min
+      // Lower than a min
       return '${(duration)}"';
     }
   }

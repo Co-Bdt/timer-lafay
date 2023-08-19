@@ -8,7 +8,7 @@ void main() {
   SharedPreferences.setMockInitialValues({});
 
   group('Test persistence manager class', () {
-    // test the initialization of SharedPreferences instance
+    // Test the initialization of SharedPreferences instance
     test(
         'PersistenceManager - SharedPreferences instance should be initialized',
         () async {
@@ -18,29 +18,29 @@ void main() {
       expect(PersistenceManager.sharedPreferencesInstance, isNotNull);
     });
 
-    // test the store() function
+    // Test the store() function
     test('PersistenceManager - store() function should persist a value',
         () async {
       await PersistenceManager.initializeSharedPreferences();
-      // store a value
+      // Store a value
       PersistenceManager.store('key', 'value');
-      // get the value
+      // Get the value
       final value = PersistenceManager
           .sharedPreferencesInstance?.sharedPreferences
           .get('key');
-      // expect the value to be 'value'
+      // Expect the value to be 'value'
       expect(value, 'value');
     });
 
-    // test the get() function
+    // Test the get() function
     test('PersistenceManager - get() function should return a value', () async {
       await PersistenceManager.initializeSharedPreferences();
-      // store a value
+      // Store a value
       PersistenceManager.sharedPreferencesInstance?.sharedPreferences
           .setString('key', 'value');
-      // get the value
+      // Get the value
       final value = PersistenceManager.get('key');
-      // expect the value to be 'value'
+      // Expect the value to be 'value'
       expect(value, 'value');
     });
   });
