@@ -315,26 +315,29 @@ class HomeState extends State<Home> {
                   ),
                   Expanded(
                     flex: 21,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _timer.cancel();
-                            isStopwatchOn = false;
-                            if (reps[0] != true) {
-                              pressRepButton(whichRepButtonIsPressed() + 1);
-                            }
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[900],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40.0),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _timer.cancel();
+                              isStopwatchOn = false;
+                              if (reps[0] != true) {
+                                pressRepButton(whichRepButtonIsPressed() + 1);
+                              }
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red[900],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40.0),
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'STOP',
-                          style: TextStyle(fontSize: 40),
-                        )),
+                          child: const Text(
+                            'STOP',
+                            style: TextStyle(fontSize: 40),
+                          )),
+                    ),
                   ),
                 ],
               ]));
