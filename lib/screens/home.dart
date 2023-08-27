@@ -327,6 +327,9 @@ class HomeState extends State<Home> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red[900],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40.0),
+                          ),
                         ),
                         child: const Text(
                           'STOP',

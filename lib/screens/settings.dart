@@ -36,7 +36,12 @@ class SettingsState extends State<Settings> {
           'Settings',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.grey[800],
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10))),
+        toolbarHeight: 65,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -46,7 +51,10 @@ class SettingsState extends State<Settings> {
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
                 'Timers',
-                style: TextStyle(color: Colors.amber[600], fontSize: 17),
+                style: TextStyle(
+                    color: Colors.amber[600],
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             TimerPickerButton(1, Duration(seconds: durations[0].duration)),
@@ -59,14 +67,20 @@ class SettingsState extends State<Settings> {
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 20),
               child: Text(
                 'Behaviour',
-                style: TextStyle(color: Colors.amber[600], fontSize: 17),
+                style: TextStyle(
+                    color: Colors.amber[600],
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             Container(
               height: 70,
+              margin: const EdgeInsets.only(left: 5, right: 5),
               padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-              color: Colors.grey[800],
               alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(10)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,7 +90,7 @@ class SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                        padding: EdgeInsets.fromLTRB(5, 0, 0, 4),
                         child: Text(
                           'Vibration',
                           style: TextStyle(
@@ -85,9 +99,12 @@ class SettingsState extends State<Settings> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Text(
-                        'Vibrate when the timer is almost over',
-                        style: TextStyle(fontSize: 14, color: Colors.white70),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5, top: 1),
+                        child: Text(
+                          'Vibrate when the timer is almost over',
+                          style: TextStyle(fontSize: 14, color: Colors.white70),
+                        ),
                       ),
                     ],
                   ),

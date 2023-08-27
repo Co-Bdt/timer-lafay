@@ -30,30 +30,41 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text(
-        'Timer Lafay',
-        style: TextStyle(color: Colors.white),
+      title: const Padding(
+        padding: EdgeInsets.only(top: 6, left: 8),
+        child: Text(
+          'Timer Lafay',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.grey[800],
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10))),
       actions: <Widget>[
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 3, 0),
+          padding: const EdgeInsets.fromLTRB(0, 8, 10, 0),
           child: PopupMenuButton<int>(
             icon: const Icon(
               Icons.menu,
               color: Colors.white,
               size: 28,
             ),
-            color: Colors.grey[900],
+            color: Colors.grey[700],
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             onSelected: (value) => onSelected(context, value),
             itemBuilder: (context) => [
               const PopupMenuItem(
                 textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                padding: EdgeInsets.only(left: 25),
                 value: 1,
                 child: Text('Settings'),
               ),
               const PopupMenuItem(
                 textStyle: TextStyle(color: Colors.white, fontSize: 16),
+                padding: EdgeInsets.only(left: 25),
                 value: 2,
                 child: Text("Olivier Lafay's books"),
               )
@@ -65,5 +76,5 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(55);
+  Size get preferredSize => const Size.fromHeight(65);
 }

@@ -26,10 +26,11 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
   Widget build(BuildContext context) {
     return Container(
       height: 70,
-      margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
+      margin: const EdgeInsets.fromLTRB(5, 5, 5, 0),
       padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-      color: Colors.grey[800],
       alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+          color: Colors.grey[800], borderRadius: BorderRadius.circular(10)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -38,18 +39,24 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
                 child: Text(
                   'Timer ${widget.timerNumber}',
-                  style: const TextStyle(fontSize: 15, color: Colors.white),
+                  style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
-              Text(
-                TimerEntity(_timerDuration.inSeconds).getTimer(),
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.amber[600],
-                    fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, top: 1),
+                child: Text(
+                  TimerEntity(_timerDuration.inSeconds).getTimer(),
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.amber[600],
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),

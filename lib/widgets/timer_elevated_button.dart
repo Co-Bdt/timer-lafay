@@ -17,9 +17,11 @@ class TimerElevatedButton extends StatelessWidget {
               startStopWatch();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2E8B57),
-              textStyle: const TextStyle(fontSize: 30),
-            ),
+                backgroundColor: const Color(0xFF30905a),
+                textStyle: const TextStyle(fontSize: 32),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                )),
             child: Text(timer,
                 style: const TextStyle(fontWeight: FontWeight.w500))),
       ),

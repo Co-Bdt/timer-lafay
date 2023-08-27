@@ -37,10 +37,13 @@ class RepElevatedButtonState extends State<RepElevatedButton> {
               backgroundColor: widget.press != null
                   ? widget.press == true
                       ? Colors.amber[600]
-                      : const Color(0xFF2E8B57)
+                      : const Color(0xFF30905a)
                   : Colors.amber[600],
               textStyle: const TextStyle(fontSize: 30),
-              padding: const EdgeInsets.all(10)),
+              padding: const EdgeInsets.all(10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              )),
           child: Text(widget.number,
               style: const TextStyle(
                 color: Colors.white,
