@@ -97,7 +97,6 @@ class HomeState extends State<Home> {
   }
 
   Future<void> startTimer() async {
-    await RingManager.session.setActive(true);
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
@@ -111,6 +110,7 @@ class HomeState extends State<Home> {
           });
         } else {
           if (timerOnInSeconds < 7 && timerOnInSeconds > 1) {
+            await RingManager.session.setActive(true);
             await RingManager.pool.play(RingManager.soundId);
 
             // If the user has enabled vibration

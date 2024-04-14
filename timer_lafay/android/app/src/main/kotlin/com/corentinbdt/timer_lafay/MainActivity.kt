@@ -1,4 +1,4 @@
-package com.example.timer_lafay
+package com.corentinbdt.timer_lafay
 
 import io.flutter.embedding.android.FlutterActivity
 
