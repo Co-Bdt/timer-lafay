@@ -10,7 +10,10 @@ class RingManager {
 
   static const ring =
       'packages/timer_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav';
-  static int soundId = 0;
+  static int ringId = 0;
+
+  static const gong = 'packages/timer_lafay/assets/audio/gong-end-rest.wav';
+  static int gongId = 0;
 
   static Future<AudioSession> configureAudioSession() async {
     session = await AudioSession.instance;
@@ -32,9 +35,12 @@ class RingManager {
     return session;
   }
 
-  // Pre-load audio file to avoid getting a delay when playing it
+  // Pre-load countdown audio file to avoid getting a delay when playing it
   static void loadRing() async {
-    soundId = await rootBundle.load(ring).then((ByteData soundData) {
+    ringId = await rootBundle.load(ring).then((ByteData soundData) {
+      return pool.load(soundData);
+    });
+    gongId = await rootBundle.load(gong).then((ByteData soundData) {
       return pool.load(soundData);
     });
   }

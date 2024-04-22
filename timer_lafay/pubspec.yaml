@@ -37,6 +37,7 @@ flutter:
   uses-material-design: true
   
   assets:
+    - packages/timer_lafay/assets/audio/gong-end-rest.wav
     - packages/timer_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav
     - packages/timer_lafay/assets/image/timer-lafay-logo.png
 

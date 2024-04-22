@@ -109,9 +109,12 @@ class HomeState extends State<Home> {
             isStopwatchOn = false;
           });
         } else {
+          if (timerOnInSeconds == 1) {
+            await RingManager.pool.play(RingManager.gongId);
+          }
           if (timerOnInSeconds < 7 && timerOnInSeconds > 1) {
             await RingManager.session.setActive(true);
-            await RingManager.pool.play(RingManager.soundId);
+            await RingManager.pool.play(RingManager.ringId);
 
             // If the user has enabled vibration
             if (VibrationManager.isVibrationEnabled) {
