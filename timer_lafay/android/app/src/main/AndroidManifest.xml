@@ -30,5 +30,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="com.google.android.gms.ads.com.corentinbdt.timer_lafay"
+            android:value="ca-app-pub-5425427834138149~3852710326"/>
     </application>
 </manifest>
