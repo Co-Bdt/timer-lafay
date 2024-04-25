@@ -348,13 +348,31 @@ class HomeState extends State<Home> {
                 if (isStopwatchOn) ...[
                   Expanded(
                     flex: 21,
-                    child: Container(
-                        alignment: Alignment.center,
-                        child: (Text(
-                          timerOn,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 60),
-                        ))),
+                    child: Stack(
+                      children: [
+                        Container(
+                            alignment: Alignment.center,
+                            child: (Text(
+                              timerOn,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 60),
+                            ))),
+                        if (_bannerAd != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: SafeArea(
+                                child: SizedBox(
+                                  width: _bannerAd!.size.width.toDouble(),
+                                  height: _bannerAd!.size.height.toDouble(),
+                                  child: AdWidget(ad: _bannerAd!),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                   Expanded(
                     flex: 21,
