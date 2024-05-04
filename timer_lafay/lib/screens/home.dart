@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:async';
 import 'package:timer_lafay/models/timer_entity.dart';
 import 'package:timer_lafay/utils/persistence_manager.dart';
@@ -42,12 +39,6 @@ class HomeState extends State<Home> {
   };
   // List of timers
   List<TimerEntity> timers = List.filled(6, TimerEntity(0), growable: false);
-  // Ad object of banner format
-  BannerAd? _bannerAd;
-  // Test ads to avoid using production ads and risk account suspension
-  final String _adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-3940256099942544/2934735716';
 
   void loadGlobalUtils() async {
     await PersistenceManager.initializeSharedPreferences();
@@ -55,7 +46,6 @@ class HomeState extends State<Home> {
     RingManager.loadRing();
     VibrationManager.configureVibration();
     loadUsersPreferences();
-    _loadAd();
 
     // Wait 0.5 second to let the circular loader quickly appear
     await Future.delayed(const Duration(milliseconds: 500));
@@ -157,35 +147,6 @@ class HomeState extends State<Home> {
     });
   }
 
-  /// Loads and shows a banner ad.
-  ///
-  /// Dimensions of the ad are determined by the AdSize class.
-  void _loadAd() async {
-    BannerAd(
-      adUnitId: _adUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          ad.dispose();
-        },
-        // Called when an ad opens an overlay that covers the screen.
-        onAdOpened: (Ad ad) {},
-        // Called when an ad removes an overlay that covers the screen.
-        onAdClosed: (Ad ad) {},
-        // Called when an impression occurs on the ad.
-        onAdImpression: (Ad ad) {},
-      ),
-    ).load();
-  }
-
   @override
   void initState() {
     loadGlobalUtils();
@@ -196,7 +157,6 @@ class HomeState extends State<Home> {
   void dispose() {
     if (_timer.isActive) _timer.cancel();
     RingManager.pool.release();
-    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -348,31 +308,13 @@ class HomeState extends State<Home> {
                 if (isStopwatchOn) ...[
                   Expanded(
                     flex: 21,
-                    child: Stack(
-                      children: [
-                        Container(
-                            alignment: Alignment.center,
-                            child: (Text(
-                              timerOn,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 60),
-                            ))),
-                        if (_bannerAd != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: SafeArea(
-                                child: SizedBox(
-                                  width: _bannerAd!.size.width.toDouble(),
-                                  height: _bannerAd!.size.height.toDouble(),
-                                  child: AdWidget(ad: _bannerAd!),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
+                    child: Container(
+                        alignment: Alignment.center,
+                        child: (Text(
+                          timerOn,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 60),
+                        ))),
                   ),
                   Expanded(
                     flex: 21,

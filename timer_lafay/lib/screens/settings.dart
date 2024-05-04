@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'package:timer_lafay/models/timer_entity.dart';
+import 'package:timer_lafay/utils/ad_manager.dart';
 import 'package:timer_lafay/utils/persistence_manager.dart';
 import 'package:timer_lafay/utils/vibration_manager.dart';
 import 'package:timer_lafay/widgets/timer_picker_button.dart';
@@ -16,6 +19,11 @@ class SettingsState extends State<Settings> {
   bool isVibrationActive = false;
   List<TimerEntity> durations = [];
 
+  // Ad object of banner format
+  BannerAd? _bannerAd;
+  // AdSize object to custome the banner size
+  AdSize _adSize = const AdSize(width: 320, height: 100);
+
   void loadTimers(Map args) {
     if (args['timers'] != null) {
       for (var i = 0; i < args['timers'].length; i++) {
@@ -24,10 +32,49 @@ class SettingsState extends State<Settings> {
     }
   }
 
+  /// Loads and shows a banner ad.
+  ///
+  /// Dimensions of the ad are determined by the AdSize class.
+  void loadAd() async {
+    BannerAd(
+      adUnitId: AdManager.testAdUnitId,
+      request: const AdRequest(),
+      size: _adSize,
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+        },
+        // Called when an ad opens an overlay that covers the screen.
+        onAdOpened: (Ad ad) {},
+        // Called when an ad removes an overlay that covers the screen.
+        onAdClosed: (Ad ad) {},
+        // Called when an impression occurs on the ad.
+        onAdImpression: (Ad ad) {},
+      ),
+    ).load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Extract the arguments from the current ModalRoute settings and pass them
     loadTimers(ModalRoute.of(context)!.settings.arguments as Map);
+
+    _adSize = AdSize(
+        width: MediaQuery.of(context).size.width.toInt() - 20, height: 100);
+    loadAd();
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
@@ -47,6 +94,20 @@ class SettingsState extends State<Settings> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (_bannerAd != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: SafeArea(
+                    child: SizedBox(
+                      width: _bannerAd!.size.width.toDouble(),
+                      height: _bannerAd!.size.height.toDouble(),
+                      child: AdWidget(ad: _bannerAd!),
+                    ),
+                  ),
+                ),
+              ),
             Container(
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 18),
               child: Text(
