@@ -21,7 +21,7 @@ class SettingsState extends State<Settings> {
 
   // Ad object of banner format
   BannerAd? _bannerAd;
-  // AdSize object to custome the banner size
+  // AdSize object to custome the banner ad size
   AdSize _adSize = const AdSize(width: 320, height: 100);
 
   void loadTimers(Map args) {
@@ -37,7 +37,7 @@ class SettingsState extends State<Settings> {
   /// Dimensions of the ad are determined by the AdSize class.
   void loadAd() async {
     BannerAd(
-      adUnitId: AdManager.testAdUnitId,
+      adUnitId: AdManager.bannerTestAdUnitId,
       request: const AdRequest(),
       size: _adSize,
       listener: BannerAdListener(
@@ -51,12 +51,6 @@ class SettingsState extends State<Settings> {
         onAdFailedToLoad: (ad, err) {
           ad.dispose();
         },
-        // Called when an ad opens an overlay that covers the screen.
-        onAdOpened: (Ad ad) {},
-        // Called when an ad removes an overlay that covers the screen.
-        onAdClosed: (Ad ad) {},
-        // Called when an impression occurs on the ad.
-        onAdImpression: (Ad ad) {},
       ),
     ).load();
   }

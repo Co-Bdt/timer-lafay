@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:async';
 import 'package:timer_lafay/models/timer_entity.dart';
+import 'package:timer_lafay/utils/ad_manager.dart';
 import 'package:timer_lafay/utils/persistence_manager.dart';
 import 'package:timer_lafay/utils/ring_manager.dart';
 import 'package:timer_lafay/utils/extensions.dart';
@@ -39,6 +41,10 @@ class HomeState extends State<Home> {
   };
   // List of timers
   List<TimerEntity> timers = List.filled(6, TimerEntity(0), growable: false);
+  // Ad object of banner format
+  InterstitialAd? _interstitialAd;
+  // // AdSize object to custome the interstitial ad size
+  // AdSize _adSize = const AdSize(width: 320, height: 100);
 
   void loadGlobalUtils() async {
     await PersistenceManager.initializeSharedPreferences();
@@ -46,9 +52,15 @@ class HomeState extends State<Home> {
     RingManager.loadRing();
     VibrationManager.configureVibration();
     loadUsersPreferences();
+    loadAd();
 
     // Wait 0.5 second to let the circular loader quickly appear
     await Future.delayed(const Duration(milliseconds: 500));
+
+    if (_interstitialAd != null) {
+      debugPrint('Showing ad');
+      _interstitialAd!.show();
+    }
 
     setState(() {
       isLoaded = true;
@@ -145,6 +157,38 @@ class HomeState extends State<Home> {
       }
       startTimer();
     });
+  }
+
+  /// Loads and shows a banner ad.
+  ///
+  /// Dimensions of the ad are determined by the AdSize class.
+  void loadAd() async {
+    InterstitialAd.load(
+        adUnitId: AdManager.interstitialTestAdUnitId,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          // Called when an ad is successfully received.
+          onAdLoaded: (ad) {
+            // An ad must be deleted when it is no longer needed.
+            ad.fullScreenContentCallback = FullScreenContentCallback(
+              // Called when the ad failed to show full screen content.
+              onAdFailedToShowFullScreenContent: (ad, err) {
+                ad.dispose();
+              },
+              // Called when the ad dismissed full screen content.
+              onAdDismissedFullScreenContent: (ad) {
+                ad.dispose();
+              },
+            );
+            debugPrint('$ad loaded.');
+            // Keep a reference to the ad so you can show it later.
+            _interstitialAd = ad;
+          },
+          // Called when an ad request failed.
+          onAdFailedToLoad: (LoadAdError error) {
+            debugPrint('InterstitialAd failed to load: $error');
+          },
+        ));
   }
 
   @override
