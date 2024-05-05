@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:timer_lafay/screens/home.dart';
+import 'package:timer_lafay/screens/loading.dart';
 import 'package:timer_lafay/screens/settings.dart';
 
 void main() async {
@@ -15,9 +16,16 @@ void main() async {
   runApp(
     MaterialApp(
         debugShowCheckedModeBanner: false, // To remove debug banner
-        initialRoute: '/home',
+        initialRoute: '/',
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            case '/':
+              return PageRouteBuilder(
+                  settings:
+                      settings, // Pass this to make popUntil(), pushNamedAndRemoveUntil(), works
+                  pageBuilder: (_, __, ___) => const Loading(),
+                  transitionsBuilder: (_, a, __, c) =>
+                      FadeTransition(opacity: a, child: c));
             case '/home':
               return PageRouteBuilder(
                   settings:
