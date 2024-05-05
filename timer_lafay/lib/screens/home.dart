@@ -10,6 +10,7 @@ import 'package:timer_lafay/utils/vibration_manager.dart';
 import 'package:timer_lafay/widgets/home_app_bar.dart';
 import 'package:timer_lafay/widgets/rep_elevated_button.dart';
 import 'package:timer_lafay/widgets/timer_elevated_button.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -150,6 +151,8 @@ class HomeState extends State<Home> {
 
   @override
   void initState() {
+    // The following line will enable the Android and iOS wakelock.
+    WakelockPlus.enable();
     loadGlobalUtils();
     super.initState();
   }
@@ -158,6 +161,8 @@ class HomeState extends State<Home> {
   void dispose() {
     if (_timer.isActive) _timer.cancel();
     RingManager.pool.release();
+    // The next line disables the wakelock again.
+    WakelockPlus.disable();
     super.dispose();
   }
 

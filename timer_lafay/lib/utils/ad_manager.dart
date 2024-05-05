@@ -12,4 +12,6 @@ class AdManager {
 
   // Production ads
   // static final String settingsAdUnitId = 'ca-app-pub-5425427834138149/1787969550';
+
+  // static final String interstitialAdUnitId = 'ca-app-pub-5425427834138149/3657301021';
 }

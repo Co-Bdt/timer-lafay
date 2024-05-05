@@ -8,6 +8,7 @@ import 'package:timer_lafay/screens/settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Google Mobile Ads SDK
   MobileAds.instance.initialize();
 
   await SystemChrome.setPreferredOrientations(
