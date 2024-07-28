@@ -5,8 +5,10 @@ import 'package:timer_lafay/models/timer_entity.dart';
 import 'package:timer_lafay/utils/ad_manager.dart';
 import 'package:timer_lafay/utils/persistence_manager.dart';
 import 'package:timer_lafay/utils/vibration_manager.dart';
-import 'package:timer_lafay/widgets/timer_picker_button.dart';
-import 'package:timer_lafay/utils/extensions.dart';
+import 'package:timer_lafay/widgets/settings_behaviour_parameter.dart';
+import 'package:timer_lafay/widgets/settings_timer_picker_button.dart';
+
+import '../utils/ring_manager.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -16,6 +18,7 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
+  bool isDuckingActive = false;
   bool isVibrationActive = false;
   List<TimerEntity> durations = [];
 
@@ -53,6 +56,47 @@ class SettingsState extends State<Settings> {
         },
       ),
     ).load();
+  }
+
+  void toggleDucking() {
+    setState(() {
+      isDuckingActive = !isDuckingActive;
+      // Save the value to the shared preferences
+      PersistenceManager.store('isDuckingActive', isDuckingActive.toString());
+      RingManager.isDuckingActive = isDuckingActive;
+    });
+  }
+
+  void toggleVibration() {
+    if (VibrationManager.hasVibration) {
+      setState(() {
+        isVibrationActive = !isVibrationActive;
+        // Save the value to the shared preferences
+        PersistenceManager.store(
+            'isVibrationActive', isVibrationActive.toString());
+        VibrationManager.isVibrationActive = isVibrationActive;
+      });
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+            backgroundColor: Colors.grey[900],
+            title: const Text("Information",
+                style: TextStyle(color: Colors.white)),
+            content: const Text("Vibration is not available on this device",
+                style: TextStyle(color: Colors.white70)),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "OK",
+                    style: TextStyle(color: Colors.amber[600]),
+                  ))
+            ]),
+      );
+    }
   }
 
   @override
@@ -119,6 +163,16 @@ class SettingsState extends State<Settings> {
             TimerPickerButton(5, Duration(seconds: durations[4].duration)),
             TimerPickerButton(6, Duration(seconds: durations[5].duration)),
             Container(
+              margin: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+              child: const Text(
+                'The countdown sound level can be adjusted using the device ring volume.',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            Container(
               margin: const EdgeInsets.fromLTRB(20, 20, 0, 20),
               child: Text(
                 'Behaviour',
@@ -128,85 +182,14 @@ class SettingsState extends State<Settings> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            Container(
-              height: 70,
-              margin: const EdgeInsets.only(left: 5, right: 5),
-              padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                  color: Colors.grey[800],
-                  borderRadius: BorderRadius.circular(10)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 4),
-                        child: Text(
-                          'Vibration',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5, top: 1),
-                        child: Text(
-                          'Vibrate when the timer is almost over',
-                          style: TextStyle(fontSize: 14, color: Colors.white70),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Checkbox(
-                      value: (PersistenceManager.get('isVibrationActive'))
-                          .toBoolean(),
-                      side: MaterialStateBorderSide.resolveWith(
-                          (states) => const BorderSide(color: Colors.white)),
-                      activeColor: Colors.grey[800],
-                      checkColor: Colors.amber[600],
-                      onChanged: (bool? checkboxChanged) async {
-                        if (VibrationManager.hasVibration) {
-                          setState(() {
-                            isVibrationActive = checkboxChanged!;
-                          });
-                          // Save the value to the shared preferences
-                          PersistenceManager.store(
-                              'isVibrationActive', checkboxChanged.toString());
-                          VibrationManager.isVibrationEnabled =
-                              checkboxChanged!;
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                backgroundColor: Colors.grey[900],
-                                title: const Text("Information",
-                                    style: TextStyle(color: Colors.white)),
-                                content: const Text(
-                                    "Vibration is not available on this device",
-                                    style: TextStyle(color: Colors.white70)),
-                                actions: <Widget>[
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text(
-                                        "OK",
-                                        style:
-                                            TextStyle(color: Colors.amber[600]),
-                                      ))
-                                ]),
-                          );
-                        }
-                      })
-                ],
-              ),
-            )
+            SettingsBehaviourParameter(
+                "Audio Ducking",
+                "Lower the volume of other audio on countdown",
+                "isDuckingActive",
+                isDuckingActive,
+                toggleDucking),
+            SettingsBehaviourParameter("Vibration", "Vibrate on countdown",
+                "isVibrationActive", isVibrationActive, toggleVibration),
           ],
         ),
       ),

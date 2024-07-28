@@ -6,7 +6,10 @@ class RingManager {
   static late AudioSession session;
 
   static Soundpool pool = Soundpool.fromOptions(
-      options: const SoundpoolOptions(streamType: StreamType.music));
+      options: const SoundpoolOptions(streamType: StreamType.ring));
+
+  // Store the vibration status
+  static bool isDuckingActive = false;
 
   static const ring =
       'packages/timer_lafay/assets/audio/mixkit-plastic-bubble-click-1124-short.wav';
@@ -26,11 +29,11 @@ class RingManager {
       avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
       androidAudioAttributes: AndroidAudioAttributes(
         contentType: AndroidAudioContentType.music,
-        flags: AndroidAudioFlags.none,
-        usage: AndroidAudioUsage.media,
+        flags: AndroidAudioFlags.audibilityEnforced,
+        usage: AndroidAudioUsage.notificationRingtone,
       ),
       androidAudioFocusGainType: AndroidAudioFocusGainType.gainTransientMayDuck,
-      androidWillPauseWhenDucked: true,
+      androidWillPauseWhenDucked: false,
     ));
     return session;
   }

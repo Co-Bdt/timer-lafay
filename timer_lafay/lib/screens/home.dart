@@ -44,8 +44,10 @@ class HomeState extends State<Home> {
 
   void loadGlobalUtils() async {
     await PersistenceManager.initializeSharedPreferences();
+
     RingManager.configureAudioSession();
     RingManager.loadRing();
+
     VibrationManager.configureVibration();
     loadUsersPreferences();
 
@@ -73,7 +75,9 @@ class HomeState extends State<Home> {
             TimerEntity(value != "" ? int.parse(value) : defaultTimers[i + 1]!);
       }
     });
-    VibrationManager.isVibrationEnabled =
+    RingManager.isDuckingActive =
+        PersistenceManager.get('isDuckingActive').toBoolean();
+    VibrationManager.isVibrationActive =
         PersistenceManager.get('isVibrationActive').toBoolean();
   }
 
@@ -104,8 +108,9 @@ class HomeState extends State<Home> {
       oneSec,
       (Timer timer) async {
         if (timerOnInSeconds == 0) {
-          await RingManager.session.setActive(false);
-
+          if (RingManager.isDuckingActive) {
+            await RingManager.session.setActive(false);
+          }
           setState(() {
             timer.cancel();
             isStopwatchOn = false;
@@ -115,11 +120,13 @@ class HomeState extends State<Home> {
             await RingManager.pool.play(RingManager.gongId);
           }
           if (timerOnInSeconds < 7 && timerOnInSeconds > 1) {
-            await RingManager.session.setActive(true);
+            if (RingManager.isDuckingActive) {
+              await RingManager.session.setActive(true);
+            }
             await RingManager.pool.play(RingManager.ringId);
 
             // If the user has enabled vibration
-            if (VibrationManager.isVibrationEnabled) {
+            if (VibrationManager.isVibrationActive) {
               if (VibrationManager.hasAmplitudeControl) {
                 Vibration.vibrate(duration: 250, amplitude: 128);
               } else {
@@ -327,7 +334,7 @@ class HomeState extends State<Home> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                       child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             setState(() {
                               _timer.cancel();
                               isStopwatchOn = false;
@@ -335,6 +342,9 @@ class HomeState extends State<Home> {
                                 pressRepButton(whichRepButtonIsPressed() + 1);
                               }
                             });
+                            if (RingManager.isDuckingActive) {
+                              await RingManager.session.setActive(false);
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red[900],

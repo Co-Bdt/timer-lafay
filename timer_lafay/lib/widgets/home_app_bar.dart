@@ -34,7 +34,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         padding: EdgeInsets.only(top: 6, left: 8),
         child: Text(
           'Timer Lafay',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       backgroundColor: Colors.grey[800],

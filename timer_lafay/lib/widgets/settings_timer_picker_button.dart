@@ -26,7 +26,7 @@ class TimerPickerButtonState extends State<TimerPickerButton> {
   Widget build(BuildContext context) {
     return Container(
       height: 70,
-      margin: const EdgeInsets.fromLTRB(5, 5, 5, 0),
+      margin: const EdgeInsets.fromLTRB(5, 0, 5, 5),
       padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
