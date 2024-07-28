@@ -23,7 +23,7 @@ class _LoadingState extends State<Loading> {
   /// Dimensions of the ad are determined by the AdSize class.
   void loadAd() async {
     InterstitialAd.load(
-        adUnitId: AdManager.interstitialTestAdUnitId,
+        adUnitId: AdManager.interstitialAdUnitId,
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           // Called when an ad is successfully received.

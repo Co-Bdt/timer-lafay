@@ -37,7 +37,7 @@ class SettingsState extends State<Settings> {
   /// Dimensions of the ad are determined by the AdSize class.
   void loadAd() async {
     BannerAd(
-      adUnitId: AdManager.bannerTestAdUnitId,
+      adUnitId: AdManager.bannerAdUnitId,
       request: const AdRequest(),
       size: _adSize,
       listener: BannerAdListener(
